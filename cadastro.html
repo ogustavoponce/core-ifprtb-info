@@ -20,8 +20,8 @@
       --text-main: #F8F8F8;      
       --text-muted: #8D8D99;     
       --color-primary: #2F9E41;  
-      --color-secondary: #3F3F46; 
-      --color-secondary-hover: #27272A; 
+      --color-blue: #1351b4; 
+      --color-blue-hover: #0f4396;
     }
     body { background-color: var(--bg-puro); color: var(--text-main); }
   </style>
@@ -44,14 +44,19 @@
   <main class="flex-grow flex items-center justify-center p-4 sm:p-6 my-8">
     <div class="max-w-5xl w-full bg-[var(--bg-card)] rounded-xl shadow-[0_10px_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col md:flex-row border border-[var(--border-dark)]">
 
-      <div class="w-full md:w-5/12 bg-[var(--color-secondary)] p-10 text-white flex flex-col justify-center relative overflow-hidden">
+      <div class="w-full md:w-5/12 bg-[var(--color-blue)] p-10 text-white flex flex-col justify-center relative overflow-hidden">
          <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
          <div class="relative z-10">
-           <i class="fa-solid fa-user-plus text-4xl mb-6 text-gray-300"></i>
+           <i class="fa-solid fa-user-plus text-4xl mb-6 text-blue-200"></i>
            <h2 class="text-3xl font-extrabold mb-4 leading-tight tracking-tight">Crie sua conta.</h2>
-           <p class="text-sm text-gray-300 mb-6 leading-relaxed font-light">
+           <p class="text-sm text-blue-100 mb-6 leading-relaxed font-light">
              Preencha seus dados reais para que a liderança da turma possa aprovar seu acesso à plataforma.
            </p>
+           
+           <div class="border-l-4 border-[var(--color-primary)] pl-4 py-2 bg-black/20 p-3 rounded-r shadow-inner">
+             <p class="text-xs text-blue-100 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-circle-info mr-1"></i> Importante</p>
+             <p class="text-sm font-light text-white">Utilize um e-mail válido para recuperação.</p>
+           </div>
          </div>
       </div>
 
@@ -64,7 +69,7 @@
             <label class="block text-sm font-bold text-[var(--text-muted)] mb-1.5" for="nome-cadastro">Nome Completo</label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-user text-gray-500"></i></div>
-              <input type="text" id="nome-cadastro" class="w-full pl-11 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="Ex: Gustavo Ponce">
+              <input type="text" id="nome-cadastro" class="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-blue)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="Ex: Gustavo Ponce">
             </div>
           </div>
 
@@ -72,7 +77,7 @@
             <label class="block text-sm font-bold text-[var(--text-muted)] mb-1.5" for="email-cadastro">E-mail</label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-envelope text-gray-500"></i></div>
-              <input type="email" id="email-cadastro" class="w-full pl-11 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="nome@exemplo.com">
+              <input type="email" id="email-cadastro" class="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-blue)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="nome@exemplo.com">
             </div>
           </div>
 
@@ -80,17 +85,17 @@
             <label class="block text-sm font-bold text-[var(--text-muted)] mb-1.5" for="senha-cadastro">Criar Senha (Mín. 6 caracteres)</label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-lock text-gray-500"></i></div>
-              <input type="password" id="senha-cadastro" class="w-full pl-11 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="Digite uma senha forte">
+              <input type="password" id="senha-cadastro" class="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-blue)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="Digite uma senha forte">
             </div>
           </div>
 
-          <button id="btn-cadastrar" type="button" class="w-full bg-[#2F9E41] hover:bg-[#258034] text-white font-bold py-4 px-4 rounded-md transition-all shadow-md flex justify-center items-center gap-2 mt-6 text-sm uppercase tracking-wider">
+          <button id="btn-cadastrar" type="button" class="w-full bg-[var(--color-blue)] hover:bg-[var(--color-blue-hover)] text-white font-bold py-4 px-4 rounded-md transition-all shadow-md flex justify-center items-center gap-2 mt-6 text-sm uppercase tracking-wider">
             Finalizar Cadastro <i class="fa-solid fa-check"></i>
           </button>
         </form>
 
         <p class="mt-6 text-center text-sm text-[var(--text-muted)]">
-          Já possui acesso? <a href="index.html" class="text-white font-bold hover:underline">Faça login aqui</a>
+          Já possui acesso? <a href="index.html" class="text-[var(--color-blue)] font-bold hover:underline">Faça login aqui</a>
         </p>
 
       </div>
