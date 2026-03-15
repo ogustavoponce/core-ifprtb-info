@@ -6,26 +6,23 @@
   <title>CORE - Acesso Institucional</title>
   
   <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
-  
   <script src="https://cdn.tailwindcss.com"></script>
-  
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
     body { font-family: 'Open Sans', sans-serif; }
     
-    /* Configuração de Cores Globais - TEMA DARK */
     :root {
-      --bg-puro: #121214;         /* Fundo da página */
-      --bg-card: #1a1a1e;         /* Fundo do card/header/footer */
-      --bg-input: #2a2a2e;        /* Fundo dos campos de texto */
-      --border-dark: #323238;    /* Bordas sutis */
-      --text-main: #F8F8F8;      /* Texto principal */
-      --text-muted: #8D8D99;     /* Texto secundário/sutil */
-      --color-primary: #2F9E41;  /* Verde da Logo (para detalhes) */
-      --color-secondary: #1351b4; /* AZUL Secundário (para botões/links) */
-      --color-secondary-hover: #0f4396;
+      --bg-puro: #121214;         
+      --bg-card: #1a1a1e;         
+      --bg-input: #2a2a2e;        
+      --border-dark: #323238;    
+      --text-main: #F8F8F8;      
+      --text-muted: #8D8D99;     
+      --color-primary: #2F9E41;  
+      --color-secondary: #3F3F46; /* CINZA CHUMBO */
+      --color-secondary-hover: #27272A; /* CINZA MAIS ESCURO NO HOVER */
     }
 
     body { background-color: var(--bg-puro); color: var(--text-main); }
@@ -36,8 +33,8 @@
   <header class="w-full bg-[var(--bg-card)] border-b border-[var(--border-dark)] shadow-md">
     <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
       <div class="flex items-center gap-3">
-         <img src="assets/img/logo.png" alt="Logo CORE" class="h-10 w-auto">
-         <div class="h-6 w-px bg-[var(--border-dark)]"></div>
+         <img src="assets/img/logo.png" alt="Logo CORE" class="h-8 w-auto">
+         <div class="h-5 w-px bg-[var(--border-dark)]"></div>
          <span class="text-sm font-semibold text-[var(--text-muted)]">Instituto Federal</span>
       </div>
       <div class="text-xs font-semibold text-[var(--text-muted)] hidden sm:flex items-center gap-2 px-3 py-1 bg-black/30 rounded-full">
@@ -56,56 +53,52 @@
              Plataforma Oficial
            </div>
            <h2 class="text-3xl font-extrabold mb-4 leading-tight tracking-tight">Gestão Unificada da Turma.</h2>
-           <p class="text-sm text-blue-100 mb-8 leading-relaxed font-light">
+           <p class="text-sm text-gray-300 mb-8 leading-relaxed font-light">
              O <strong>CORE</strong> centraliza horários, comunicados, e projetos. O acesso é estritamente monitorado e exclusivo para os alunos de Informática.
            </p>
-           <div class="border-l-4 border-[var(--color-primary)] pl-4 py-1 bg-black/30 p-3 rounded-r">
-             <p class="text-xs text-blue-200 font-semibold uppercase tracking-wider"><i class="fa-solid fa-circle-info mr-1"></i> Atenção</p>
-             <p class="text-sm font-light mt-1 text-white">Utilize suas credenciais institucionais.</p>
-           </div>
          </div>
       </div>
 
       <div class="w-full md:w-7/12 p-8 sm:p-12 lg:p-16">
         <h3 class="text-2xl font-bold text-[var(--text-main)] mb-2">Identifique-se</h3>
-        <p class="text-[var(--text-muted)] text-sm mb-10 font-medium">Digite suas credenciais para acessar o painel.</p>
+        <p class="text-[var(--text-muted)] text-sm mb-8 font-medium">Digite suas credenciais para acessar o painel.</p>
 
         <form class="space-y-6" onsubmit="event.preventDefault();">
           <div>
             <label class="block text-sm font-bold text-[var(--text-muted)] mb-1.5" for="email">E-mail de acesso</label>
             <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <i class="fa-solid fa-envelope text-gray-600"></i>
-              </div>
-              <input type="email" id="email" class="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="nome@exemplo.com">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-envelope text-gray-500"></i></div>
+              <input type="email" id="email" class="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="nome@exemplo.com">
             </div>
           </div>
 
           <div>
             <div class="flex justify-between items-center mb-1.5">
               <label class="block text-sm font-bold text-[var(--text-muted)]" for="senha">Senha</label>
-              <a href="#" class="text-xs font-bold text-[var(--color-secondary)] hover:text-blue-400 hover:underline transition-all">Esqueci minha senha</a>
+              <a href="#" class="text-xs font-bold text-gray-400 hover:text-white hover:underline transition-all">Esqueci minha senha</a>
             </div>
             <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <i class="fa-solid fa-lock text-gray-600"></i>
-              </div>
-              <input type="password" id="senha" class="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="Digite sua senha">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-lock text-gray-500"></i></div>
+              <input type="password" id="senha" class="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="Digite sua senha">
             </div>
           </div>
 
-          <button type="button" class="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-hover)] text-white font-bold py-4 px-4 rounded-md transition-all shadow-md flex justify-center items-center gap-2 mt-4 text-sm uppercase tracking-wider">
+          <button id="btn-entrar" type="button" class="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-hover)] text-white font-bold py-4 px-4 rounded-md transition-all shadow-md flex justify-center items-center gap-2 mt-4 text-sm uppercase tracking-wider">
             Entrar no Sistema <i class="fa-solid fa-arrow-right-to-bracket"></i>
           </button>
         </form>
 
-        <div class="mt-10 mb-8 relative flex items-center">
+        <p class="mt-6 text-center text-sm text-[var(--text-muted)]">
+          Ainda não tem acesso? <a href="cadastro.html" class="text-white font-bold hover:underline">Solicite sua conta</a>
+        </p>
+
+        <div class="mt-8 mb-6 relative flex items-center">
           <div class="flex-grow border-t border-[var(--border-dark)]"></div>
           <span class="flex-shrink-0 mx-4 text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest bg-[var(--bg-card)] px-3">Ou</span>
           <div class="flex-grow border-t border-[var(--border-dark)]"></div>
         </div>
 
-        <button id="btn-google" class="w-full bg-[var(--bg-input)] border border-[var(--border-dark)] hover:bg-[#323238] text-[var(--text-main)] font-bold py-3.5 px-4 rounded-md transition-all shadow-sm flex justify-center items-center gap-3 text-sm">
+        <button id="btn-google" class="w-full bg-[var(--bg-input)] border border-[var(--border-dark)] hover:bg-[#323238] text-[var(--text-main)] font-bold py-3.5 px-4 rounded-md transition-all flex justify-center items-center gap-3 text-sm">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-5 h-5"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
           Entrar com Conta Google
         </button>

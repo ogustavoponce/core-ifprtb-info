@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CORE - Cadastro de Aluno</title>
+  
+  <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    body { font-family: 'Open Sans', sans-serif; }
+    :root {
+      --bg-puro: #121214;         
+      --bg-card: #1a1a1e;         
+      --bg-input: #2a2a2e;        
+      --border-dark: #323238;    
+      --text-main: #F8F8F8;      
+      --text-muted: #8D8D99;     
+      --color-primary: #2F9E41;  
+      --color-secondary: #3F3F46; 
+      --color-secondary-hover: #27272A; 
+    }
+    body { background-color: var(--bg-puro); color: var(--text-main); }
+  </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+  <header class="w-full bg-[var(--bg-card)] border-b border-[var(--border-dark)] shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+         <img src="assets/img/logo.png" alt="Logo CORE" class="h-8 w-auto">
+      </div>
+      <a href="index.html" class="text-sm font-semibold text-gray-400 hover:text-white transition-colors">
+        <i class="fa-solid fa-arrow-left mr-1"></i> Voltar ao Login
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-grow flex items-center justify-center p-4 sm:p-6 my-8">
+    <div class="max-w-5xl w-full bg-[var(--bg-card)] rounded-xl shadow-[0_10px_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col md:flex-row border border-[var(--border-dark)]">
+
+      <div class="w-full md:w-5/12 bg-[var(--color-secondary)] p-10 text-white flex flex-col justify-center relative overflow-hidden">
+         <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+         <div class="relative z-10">
+           <i class="fa-solid fa-user-plus text-4xl mb-6 text-gray-300"></i>
+           <h2 class="text-3xl font-extrabold mb-4 leading-tight tracking-tight">Crie sua conta.</h2>
+           <p class="text-sm text-gray-300 mb-6 leading-relaxed font-light">
+             Preencha seus dados reais para que a liderança da turma possa aprovar seu acesso à plataforma.
+           </p>
+         </div>
+      </div>
+
+      <div class="w-full md:w-7/12 p-8 sm:p-12 lg:p-16">
+        <h3 class="text-2xl font-bold text-[var(--text-main)] mb-2">Novo Aluno</h3>
+        <p class="text-[var(--text-muted)] text-sm mb-8 font-medium">Cadastre suas credenciais de acesso.</p>
+
+        <form class="space-y-5" onsubmit="event.preventDefault();">
+          <div>
+            <label class="block text-sm font-bold text-[var(--text-muted)] mb-1.5" for="nome-cadastro">Nome Completo</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-user text-gray-500"></i></div>
+              <input type="text" id="nome-cadastro" class="w-full pl-11 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="Ex: Gustavo Ponce">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-[var(--text-muted)] mb-1.5" for="email-cadastro">E-mail</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-envelope text-gray-500"></i></div>
+              <input type="email" id="email-cadastro" class="w-full pl-11 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="nome@exemplo.com">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-[var(--text-muted)] mb-1.5" for="senha-cadastro">Criar Senha (Mín. 6 caracteres)</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-lock text-gray-500"></i></div>
+              <input type="password" id="senha-cadastro" class="w-full pl-11 pr-4 py-3 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="Digite uma senha forte">
+            </div>
+          </div>
+
+          <button id="btn-cadastrar" type="button" class="w-full bg-[#2F9E41] hover:bg-[#258034] text-white font-bold py-4 px-4 rounded-md transition-all shadow-md flex justify-center items-center gap-2 mt-6 text-sm uppercase tracking-wider">
+            Finalizar Cadastro <i class="fa-solid fa-check"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="w-full text-center py-6 text-xs text-[var(--text-muted)] font-semibold border-t border-[var(--border-dark)] bg-[var(--bg-card)] mt-auto">
+    <p>&copy; 2026 CORE Informática. Todos os direitos reservados.</p>
+  </footer>
+
+  <script type="module" src="js/auth.js"></script>
+</body>
+</html>
