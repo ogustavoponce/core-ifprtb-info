@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
+
+/* Variáveis e Configurações Globais do Projeto */
+:root {
+  --bg-dark: #121214;
+  --bg-card: #202024;
+  --border-color: #323238;
+  --text-main: #F8F8F8;
+  --text-muted: #8D8D99;
+}
+
+* {
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-dark);
+}
+
+/* Classes customizadas integradas ao Tailwind do HTML */
+.bg-core-card { background-color: var(--bg-card); }
+.border-core-border { border-color: var(--border-color); }
+.text-core-text { color: var(--text-main); }
+.text-core-muted { color: var(--text-muted); }
