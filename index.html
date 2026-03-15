@@ -21,8 +21,8 @@
       --text-main: #F8F8F8;      
       --text-muted: #8D8D99;     
       --color-primary: #2F9E41;  
-      --color-secondary: #3F3F46; /* CINZA CHUMBO */
-      --color-secondary-hover: #27272A; /* CINZA MAIS ESCURO NO HOVER */
+      --color-blue: #1351b4; 
+      --color-blue-hover: #0f4396;
     }
 
     body { background-color: var(--bg-puro); color: var(--text-main); }
@@ -46,16 +46,21 @@
   <main class="flex-grow flex items-center justify-center p-4 sm:p-6 my-8">
     <div class="max-w-5xl w-full bg-[var(--bg-card)] rounded-xl shadow-[0_10px_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col md:flex-row border border-[var(--border-dark)]">
 
-      <div class="w-full md:w-5/12 bg-[var(--color-secondary)] p-10 text-white flex flex-col justify-center relative overflow-hidden">
+      <div class="w-full md:w-5/12 bg-[var(--color-blue)] p-10 text-white flex flex-col justify-center relative overflow-hidden">
          <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
          <div class="relative z-10">
-           <div class="mb-6 inline-block px-3 py-1 bg-white/10 rounded-full text-xs font-bold tracking-widest uppercase border border-white/20">
+           <div class="mb-6 inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-bold tracking-widest uppercase border border-white/30">
              Plataforma Oficial
            </div>
            <h2 class="text-3xl font-extrabold mb-4 leading-tight tracking-tight">Gestão Unificada da Turma.</h2>
-           <p class="text-sm text-gray-300 mb-8 leading-relaxed font-light">
+           <p class="text-sm text-blue-100 mb-8 leading-relaxed font-light">
              O <strong>CORE</strong> centraliza horários, comunicados, e projetos. O acesso é estritamente monitorado e exclusivo para os alunos de Informática.
            </p>
+           
+           <div class="border-l-4 border-[var(--color-primary)] pl-4 py-2 bg-black/20 p-3 rounded-r shadow-inner">
+             <p class="text-xs text-blue-100 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-circle-info mr-1"></i> Atenção</p>
+             <p class="text-sm font-light text-white">Utilize suas credenciais institucionais.</p>
+           </div>
          </div>
       </div>
 
@@ -68,22 +73,22 @@
             <label class="block text-sm font-bold text-[var(--text-muted)] mb-1.5" for="email">E-mail de acesso</label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-envelope text-gray-500"></i></div>
-              <input type="email" id="email" class="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="nome@exemplo.com">
+              <input type="email" id="email" class="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-blue)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="nome@exemplo.com">
             </div>
           </div>
 
           <div>
             <div class="flex justify-between items-center mb-1.5">
               <label class="block text-sm font-bold text-[var(--text-muted)]" for="senha">Senha</label>
-              <a href="#" class="text-xs font-bold text-gray-400 hover:text-white hover:underline transition-all">Esqueci minha senha</a>
+              <a href="#" class="text-xs font-bold text-[var(--color-blue)] hover:text-blue-400 hover:underline transition-all">Esqueci minha senha</a>
             </div>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-lock text-gray-500"></i></div>
-              <input type="password" id="senha" class="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="Digite sua senha">
+              <input type="password" id="senha" class="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-blue)] transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="Digite sua senha">
             </div>
           </div>
 
-          <button id="btn-entrar" type="button" class="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-hover)] text-white font-bold py-4 px-4 rounded-md transition-all shadow-md flex justify-center items-center gap-2 mt-4 text-sm uppercase tracking-wider">
+          <button id="btn-entrar" type="button" class="w-full bg-[var(--color-blue)] hover:bg-[var(--color-blue-hover)] text-white font-bold py-4 px-4 rounded-md transition-all shadow-md flex justify-center items-center gap-2 mt-4 text-sm uppercase tracking-wider">
             Entrar no Sistema <i class="fa-solid fa-arrow-right-to-bracket"></i>
           </button>
         </form>
