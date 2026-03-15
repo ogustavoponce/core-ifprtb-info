@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CORE - Acesso Institucional</title>
   
+  <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -12,97 +14,109 @@
   
   <style>
     body { font-family: 'Open Sans', sans-serif; }
-    /* Fundo sutil para destacar o card principal */
-    .bg-gov { background-color: #F4F6F8; }
+    
+    /* Configuração de Cores Globais - TEMA DARK */
+    :root {
+      --bg-puro: #121214;         /* Fundo da página */
+      --bg-card: #1a1a1e;         /* Fundo do card/header/footer */
+      --bg-input: #2a2a2e;        /* Fundo dos campos de texto */
+      --border-dark: #323238;    /* Bordas sutis */
+      --text-main: #F8F8F8;      /* Texto principal */
+      --text-muted: #8D8D99;     /* Texto secundário/sutil */
+      --color-primary: #2F9E41;  /* Verde da Logo (para detalhes) */
+      --color-secondary: #1351b4; /* AZUL Secundário (para botões/links) */
+      --color-secondary-hover: #0f4396;
+    }
+
+    body { background-color: var(--bg-puro); color: var(--text-main); }
   </style>
 </head>
-<body class="bg-gov text-gray-800 antialiased flex flex-col min-h-screen">
+<body class="antialiased flex flex-col min-h-screen">
 
-  <header class="w-full bg-white border-b border-gray-300 shadow-sm">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      <div class="flex items-center gap-4">
-         <div class="w-10 h-10 bg-[#2F9E41] rounded flex items-center justify-center text-white text-xl shadow-inner">
-           <i class="fa-solid fa-building-columns"></i>
-         </div>
-         <h1 class="font-extrabold text-2xl tracking-tight text-gray-900">CORE<span class="font-light text-gray-500">.IFPR</span></h1>
+  <header class="w-full bg-[var(--bg-card)] border-b border-[var(--border-dark)] shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+         <img src="assets/img/logo.png" alt="Logo CORE" class="h-10 w-auto">
+         <div class="h-6 w-px bg-[var(--border-dark)]"></div>
+         <span class="text-sm font-semibold text-[var(--text-muted)]">Instituto Federal</span>
       </div>
-      <div class="text-sm font-semibold text-gray-500 hidden sm:flex items-center gap-2">
-        <i class="fa-solid fa-shield-halved text-[#2F9E41]"></i> Acesso Seguro
+      <div class="text-xs font-semibold text-[var(--text-muted)] hidden sm:flex items-center gap-2 px-3 py-1 bg-black/30 rounded-full">
+        <i class="fa-solid fa-shield-halved text-[var(--color-primary)]"></i> Ambiente Seguro
       </div>
     </div>
   </header>
 
-  <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
-    <div class="max-w-5xl w-full bg-white rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col md:flex-row border border-gray-200">
+  <main class="flex-grow flex items-center justify-center p-4 sm:p-6 my-8">
+    <div class="max-w-5xl w-full bg-[var(--bg-card)] rounded-xl shadow-[0_10px_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col md:flex-row border border-[var(--border-dark)]">
 
-      <div class="w-full md:w-5/12 bg-[#00420c] p-10 text-white flex flex-col justify-center relative overflow-hidden">
+      <div class="w-full md:w-5/12 bg-[var(--color-secondary)] p-10 text-white flex flex-col justify-center relative overflow-hidden">
          <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
          <div class="relative z-10">
-           <div class="mb-6 inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-bold tracking-widest uppercase border border-white/30">
+           <div class="mb-6 inline-block px-3 py-1 bg-white/10 rounded-full text-xs font-bold tracking-widest uppercase border border-white/20">
              Plataforma Oficial
            </div>
-           <h2 class="text-3xl font-extrabold mb-4 leading-tight">Gestão Unificada da Turma.</h2>
-           <p class="text-sm text-gray-200 mb-8 leading-relaxed font-light">
+           <h2 class="text-3xl font-extrabold mb-4 leading-tight tracking-tight">Gestão Unificada da Turma.</h2>
+           <p class="text-sm text-blue-100 mb-8 leading-relaxed font-light">
              O <strong>CORE</strong> centraliza horários, comunicados, e projetos. O acesso é estritamente monitorado e exclusivo para os alunos de Informática.
            </p>
-           <div class="border-l-4 border-[#2F9E41] pl-4 py-1 bg-black/20 p-3 rounded-r">
-             <p class="text-xs text-gray-300 font-semibold uppercase tracking-wider"><i class="fa-solid fa-circle-info mr-1"></i> Atenção</p>
-             <p class="text-sm font-light mt-1">Utilize suas credenciais institucionais para primeiro acesso.</p>
+           <div class="border-l-4 border-[var(--color-primary)] pl-4 py-1 bg-black/30 p-3 rounded-r">
+             <p class="text-xs text-blue-200 font-semibold uppercase tracking-wider"><i class="fa-solid fa-circle-info mr-1"></i> Atenção</p>
+             <p class="text-sm font-light mt-1 text-white">Utilize suas credenciais institucionais.</p>
            </div>
          </div>
       </div>
 
       <div class="w-full md:w-7/12 p-8 sm:p-12 lg:p-16">
-        <h3 class="text-2xl font-bold text-gray-900 mb-2">Identifique-se</h3>
-        <p class="text-gray-500 text-sm mb-8 font-medium">Digite seu e-mail e senha para acessar o painel.</p>
+        <h3 class="text-2xl font-bold text-[var(--text-main)] mb-2">Identifique-se</h3>
+        <p class="text-[var(--text-muted)] text-sm mb-10 font-medium">Digite suas credenciais para acessar o painel.</p>
 
-        <form class="space-y-5" onsubmit="event.preventDefault();">
+        <form class="space-y-6" onsubmit="event.preventDefault();">
           <div>
-            <label class="block text-sm font-bold text-gray-700 mb-1" for="email">E-mail de acesso</label>
+            <label class="block text-sm font-bold text-[var(--text-muted)] mb-1.5" for="email">E-mail de acesso</label>
             <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="fa-solid fa-envelope text-gray-400"></i>
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <i class="fa-solid fa-envelope text-gray-600"></i>
               </div>
-              <input type="email" id="email" class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1351b4] focus:border-transparent transition-all text-sm font-medium" placeholder="nome@exemplo.com">
+              <input type="email" id="email" class="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="nome@exemplo.com">
             </div>
           </div>
 
           <div>
-            <div class="flex justify-between items-center mb-1">
-              <label class="block text-sm font-bold text-gray-700" for="senha">Senha</label>
-              <a href="#" class="text-xs font-bold text-[#1351b4] hover:text-[#0f4396] hover:underline transition-all">Esqueci minha senha</a>
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="block text-sm font-bold text-[var(--text-muted)]" for="senha">Senha</label>
+              <a href="#" class="text-xs font-bold text-[var(--color-secondary)] hover:text-blue-400 hover:underline transition-all">Esqueci minha senha</a>
             </div>
             <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="fa-solid fa-lock text-gray-400"></i>
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <i class="fa-solid fa-lock text-gray-600"></i>
               </div>
-              <input type="password" id="senha" class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1351b4] focus:border-transparent transition-all text-sm font-medium" placeholder="Digite sua senha">
+              <input type="password" id="senha" class="w-full pl-11 pr-4 py-3.5 bg-[var(--bg-input)] border border-[var(--border-dark)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] focus:border-transparent transition-all text-sm font-medium text-[var(--text-main)] placeholder-gray-600" placeholder="Digite sua senha">
             </div>
           </div>
 
-          <button type="button" class="w-full bg-[#1351b4] hover:bg-[#0f4396] text-white font-bold py-3.5 px-4 rounded-md transition-all shadow-md flex justify-center items-center gap-2 mt-2">
+          <button type="button" class="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-hover)] text-white font-bold py-4 px-4 rounded-md transition-all shadow-md flex justify-center items-center gap-2 mt-4 text-sm uppercase tracking-wider">
             Entrar no Sistema <i class="fa-solid fa-arrow-right-to-bracket"></i>
           </button>
         </form>
 
-        <div class="mt-8 mb-6 relative flex items-center">
-          <div class="flex-grow border-t border-gray-200"></div>
-          <span class="flex-shrink-0 mx-4 text-gray-400 text-xs font-bold uppercase tracking-widest bg-white px-2">Ou conecte com</span>
-          <div class="flex-grow border-t border-gray-200"></div>
+        <div class="mt-10 mb-8 relative flex items-center">
+          <div class="flex-grow border-t border-[var(--border-dark)]"></div>
+          <span class="flex-shrink-0 mx-4 text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest bg-[var(--bg-card)] px-3">Ou</span>
+          <div class="flex-grow border-t border-[var(--border-dark)]"></div>
         </div>
 
-        <button id="btn-google" class="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-3 px-4 rounded-md transition-all shadow-sm flex justify-center items-center gap-3">
+        <button id="btn-google" class="w-full bg-[var(--bg-input)] border border-[var(--border-dark)] hover:bg-[#323238] text-[var(--text-main)] font-bold py-3.5 px-4 rounded-md transition-all shadow-sm flex justify-center items-center gap-3 text-sm">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-5 h-5"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
-          Conta Google
+          Entrar com Conta Google
         </button>
 
       </div>
     </div>
   </main>
 
-  <footer class="w-full text-center py-6 text-xs text-gray-500 font-semibold border-t border-gray-300 bg-white">
+  <footer class="w-full text-center py-6 text-xs text-[var(--text-muted)] font-semibold border-t border-[var(--border-dark)] bg-[var(--bg-card)] mt-auto">
     <p>&copy; 2026 CORE Informática. Todos os direitos reservados.</p>
-    <p class="mt-1 text-gray-400 font-normal">Desenvolvido por Nexus Frame</p>
+    <p class="mt-1 text-gray-700 font-normal">Desenvolvido por Nexus Frame</p>
   </footer>
 
   <script type="module" src="js/auth.js"></script>
