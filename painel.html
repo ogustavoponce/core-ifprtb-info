@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CORE - Painel de Controle</title>
+  
+  <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    body { font-family: 'Open Sans', sans-serif; }
+    :root {
+      --bg-puro: #121214;         
+      --bg-card: #1a1a1e;         
+      --border-dark: #323238;    
+      --text-main: #F8F8F8;      
+      --text-muted: #8D8D99;     
+      --color-primary: #2F9E41;  
+      --color-blue: #1351b4; 
+    }
+    body { background-color: var(--bg-puro); color: var(--text-main); }
+    
+    /* Scrollbar customizada para o menu lateral */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-puro); }
+    ::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 10px; }
+  </style>
+</head>
+<body class="antialiased flex h-screen overflow-hidden">
+
+  <aside class="w-64 bg-[var(--bg-card)] border-r border-[var(--border-dark)] flex flex-col hidden md:flex">
+    <div class="h-16 flex items-center px-6 border-b border-[var(--border-dark)]">
+      <img src="assets/img/logo.png" alt="Logo CORE" class="h-8 w-auto">
+    </div>
+    
+    <nav class="flex-1 overflow-y-auto py-4">
+      <ul class="space-y-1 px-3">
+        <li>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 bg-[var(--color-blue)] text-white rounded-lg font-semibold text-sm transition-colors">
+            <i class="fa-solid fa-house w-5"></i> Início
+          </a>
+        </li>
+        <li>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-[var(--text-muted)] hover:text-white hover:bg-[#2a2a2e] rounded-lg font-semibold text-sm transition-colors">
+            <i class="fa-regular fa-calendar-days w-5"></i> Horários das Aulas
+          </a>
+        </li>
+        <li>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-[var(--text-muted)] hover:text-white hover:bg-[#2a2a2e] rounded-lg font-semibold text-sm transition-colors">
+            <i class="fa-solid fa-bullhorn w-5"></i> Comunicados
+          </a>
+        </li>
+        <li>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-[var(--text-muted)] hover:text-white hover:bg-[#2a2a2e] rounded-lg font-semibold text-sm transition-colors">
+            <i class="fa-solid fa-mug-hot w-5"></i> Fundo do Café
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="p-4 border-t border-[var(--border-dark)]">
+      <button id="btn-sair" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors border border-transparent hover:border-red-400/20">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair do Sistema
+      </button>
+    </div>
+  </aside>
+
+  <div class="flex-1 flex flex-col h-screen overflow-hidden">
+    
+    <header class="h-16 bg-[var(--bg-card)] border-b border-[var(--border-dark)] flex items-center justify-between px-6 lg:px-10">
+      <div class="flex items-center gap-4">
+        <button class="md:hidden text-[var(--text-muted)] hover:text-white">
+          <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+        <h2 class="text-lg font-bold">Visão Geral</h2>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <div class="text-right hidden sm:block">
+          <p id="user-name" class="text-sm font-bold text-white">Carregando...</p>
+          <p class="text-xs text-[var(--color-primary)] font-semibold">Aluno Verificado</p>
+        </div>
+        <div class="h-10 w-10 bg-[var(--color-blue)] rounded-full flex items-center justify-center text-white font-bold border-2 border-[var(--border-dark)] shadow-sm">
+          <i class="fa-solid fa-user"></i>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto p-6 lg:p-10">
+      
+      <div class="w-full bg-gradient-to-r from-[var(--color-blue)] to-[#0f4396] rounded-xl p-6 lg:p-8 mb-8 shadow-lg relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div class="relative z-10">
+          <h1 class="text-2xl lg:text-3xl font-extrabold text-white mb-2 tracking-tight">Bem-vindo ao CORE.</h1>
+          <p class="text-blue-100 text-sm max-w-2xl font-light">
+            Sua central de gestão estudantil. Fique por dentro dos horários, anúncios importantes da liderança e projetos da turma de Informática para Internet.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        
+        <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6 hover:border-[var(--text-muted)] transition-colors">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-lg"><i class="fa-regular fa-clock text-[var(--color-blue)] mr-2"></i> Hoje no IFPR</h3>
+            <span class="text-xs font-bold bg-[#2a2a2e] px-2 py-1 rounded text-[var(--text-muted)]">Terça</span>
+          </div>
+          <ul class="space-y-3 text-sm">
+            <li class="flex justify-between items-center border-b border-[var(--border-dark)] pb-2">
+              <span class="text-[var(--text-muted)]">19:00 - 20:30</span>
+              <span class="font-semibold text-white">Lógica de Prog.</span>
+            </li>
+            <li class="flex justify-between items-center border-b border-[var(--border-dark)] pb-2">
+              <span class="text-[var(--text-muted)]">20:45 - 22:30</span>
+              <span class="font-semibold text-white">Design Web</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6 hover:border-[var(--text-muted)] transition-colors">
+          <h3 class="font-bold text-lg mb-4"><i class="fa-solid fa-thumbtack text-red-400 mr-2"></i> Mural da Turma</h3>
+          <div class="bg-[#2a2a2e] rounded-lg p-4 border-l-4 border-red-400">
+            <h4 class="text-sm font-bold text-white mb-1">Apresentação Cancelada</h4>
+            <p class="text-xs text-[var(--text-muted)] leading-relaxed">
+              A apresentação do projeto que ocorreria hoje foi transferida para a próxima semana.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6 hover:border-[var(--text-muted)] transition-colors">
+          <h3 class="font-bold text-lg mb-4"><i class="fa-solid fa-mug-hot text-[#d97706] mr-2"></i> Campanha do Café</h3>
+          <p class="text-sm text-[var(--text-muted)] mb-4">
+            A arrecadação mensal para manter nossa garrafa térmica abastecida está aberta!
+          </p>
+          <div class="w-full bg-[#2a2a2e] rounded-full h-2.5 mb-2">
+            <div class="bg-[#d97706] h-2.5 rounded-full" style="width: 70%"></div>
+          </div>
+          <div class="flex justify-between text-xs font-bold text-[var(--text-muted)]">
+            <span>Arrecadado: R$ 35</span>
+            <span>Meta: R$ 50</span>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="js/painel.js"></script>
+</body>
+</html>

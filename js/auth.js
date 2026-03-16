@@ -17,9 +17,12 @@ async function checarAprovacao(user) {
     
     if (dados.status === 'aprovado') {
       alert(`Acesso liberado! Bem-vindo ao CORE, ${user.displayName || dados.nome}.`);
-      // O redirecionamento pro Painel de Avisos vai entrar aqui depois!
-      // window.location.href = "painel.html"; 
-    } else {
+      
+      // AGORA A GENTE REDIRECIONA DE VERDADE! 👇
+      window.location.href = "painel.html"; 
+      
+    } else 
+        {
       await signOut(auth);
       alert("Acesso negado: Sua conta ainda está aguardando aprovação da liderança.");
     }
