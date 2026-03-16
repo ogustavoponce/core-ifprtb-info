@@ -1,7 +1,7 @@
 // ==========================================
 // IMPORTAÇÕES DO FIREBASE (Auth e Firestore)
 // ==========================================
-import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { auth, googleProvider, db } from "./firebase-config.js";
 
@@ -9,35 +9,27 @@ import { auth, googleProvider, db } from "./firebase-config.js";
 // FUNÇÃO DE SEGURANÇA: CHECAR STATUS DO ALUNO
 // ==========================================
 async function checarAprovacao(user) {
-  // Procura a ficha do aluno no banco de dados
   const docRef = doc(db, "alunos", user.uid);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
     const dados = docSnap.data();
     
-    // Se a liderança aprovou, a porta abre!
     if (dados.status === 'aprovado') {
       alert(`Acesso liberado! Bem-vindo ao CORE, ${user.displayName || dados.nome}.`);
-      
       // O redirecionamento pro Painel de Avisos vai entrar aqui depois!
       // window.location.href = "painel.html"; 
-      
     } else {
-      // Se não aprovou, expulsa o usuário (desloga) e avisa
       await signOut(auth);
       alert("Acesso negado: Sua conta ainda está aguardando aprovação da liderança.");
     }
   } else {
-    // Se o aluno tentou logar/cadastrar com o Google pela PRIMEIRA VEZ
     await setDoc(docRef, {
       nome: user.displayName || "Aluno(a)",
       email: user.email,
       status: 'pendente',
       dataCriacao: new Date()
     });
-    
-    // Expulsa para ele não entrar direto
     await signOut(auth);
     alert("Solicitação enviada! Como é seu primeiro acesso com o Google, aguarde a aprovação da liderança para entrar.");
   }
@@ -46,13 +38,12 @@ async function checarAprovacao(user) {
 // ==========================================
 // LÓGICA DO BOTÃO GOOGLE (Para Login e Cadastro)
 // ==========================================
-const btnGoogle = document.getElementById('btn-google'); // Botão da tela index
-const btnGoogleCadastro = document.getElementById('btn-google-cadastro'); // Botão da tela de cadastro
+const btnGoogle = document.getElementById('btn-google'); 
+const btnGoogleCadastro = document.getElementById('btn-google-cadastro'); 
 
 const acessarComGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
-    // Assim que ele loga com o Google, joga na função de segurança para ver se pode entrar
     await checarAprovacao(result.user);
   } catch (error) {
     console.error(error);
@@ -60,13 +51,8 @@ const acessarComGoogle = async () => {
   }
 };
 
-// Se os botões existirem na tela que o usuário abriu, liga a função de clique neles
-if (btnGoogle) {
-  btnGoogle.addEventListener('click', acessarComGoogle);
-}
-if (btnGoogleCadastro) {
-  btnGoogleCadastro.addEventListener('click', acessarComGoogle);
-}
+if (btnGoogle) btnGoogle.addEventListener('click', acessarComGoogle);
+if (btnGoogleCadastro) btnGoogleCadastro.addEventListener('click', acessarComGoogle);
 
 // ==========================================
 // LÓGICA DO LOGIN MANUAL (E-mail e Senha)
@@ -84,9 +70,7 @@ if (btnEntrar) {
     }
 
     try {
-      // Tenta fazer o login
       const result = await signInWithEmailAndPassword(auth, email, senha);
-      // Se a senha estiver certa, joga na função de segurança para ver se a liderança aprovou
       await checarAprovacao(result.user);
     } catch (error) {
       console.error(error);
@@ -112,14 +96,11 @@ if (btnCadastrar) {
     }
 
     try {
-      // 1. Cria a conta base no Firebase Auth
       const result = await createUserWithEmailAndPassword(auth, email, senha);
       const user = result.user;
       
-      // 2. Salva o nome do aluno no perfil da conta
       await updateProfile(user, { displayName: nome });
 
-      // 3. Cria a ficha do aluno no Banco de Dados (Firestore) com status 'pendente'
       await setDoc(doc(db, "alunos", user.uid), {
         nome: nome,
         email: email,
@@ -127,12 +108,9 @@ if (btnCadastrar) {
         dataCriacao: new Date()
       });
 
-      // 4. Desloga imediatamente para ele não invadir o sistema antes da aprovação
       await signOut(auth);
 
       alert(`Solicitação enviada, ${nome}! Aguarde a liberação do seu acesso pela liderança.`);
-      
-      // Joga ele de volta pra porta de entrada (Login)
       window.location.href = "index.html"; 
 
     } catch (error) {
@@ -144,6 +122,31 @@ if (btnCadastrar) {
       } else {
         alert("Erro ao criar conta. Verifique o console.");
       }
+    }
+  });
+}
+
+// ==========================================
+// LÓGICA DE RECUPERAÇÃO DE SENHA
+// ==========================================
+const btnRecuperar = document.getElementById('btn-recuperar');
+
+if (btnRecuperar) {
+  btnRecuperar.addEventListener('click', async () => {
+    const email = document.getElementById('email-recuperar').value;
+
+    if(!email) {
+      alert("Por favor, digite o seu e-mail para receber o link.");
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert("Tudo certo! Se este e-mail estiver cadastrado, você receberá um link para criar uma nova senha. Verifique sua caixa de entrada e o lixo eletrônico (spam).");
+      window.location.href = "index.html"; // Joga de volta pro login
+    } catch (error) {
+      console.error(error);
+      alert("Ocorreu um erro ao tentar enviar o e-mail. Verifique se digitou corretamente.");
     }
   });
 }
