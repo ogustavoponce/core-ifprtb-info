@@ -4,9 +4,10 @@ import { auth, db } from "./firebase-config.js";
 
 const EMAIL_ADMIN = "gustavo.ponce.ifpr@gmail.com"; 
 let usuarioAtualNome = "Aluno"; 
+let isAdmin = false;
 
 // ==========================================
-// 1. INICIALIZAÇÃO E SEGURANÇA
+// 1. INICIALIZAÇÃO
 // ==========================================
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -18,15 +19,16 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById('user-name').innerText = usuarioAtualNome;
 
       if (user.email === EMAIL_ADMIN) {
+        isAdmin = true;
         document.getElementById('menu-admin').classList.remove('hidden');
         document.getElementById('user-role').innerText = "Presidente / Admin";
         document.getElementById('user-role').classList.replace('text-[var(--color-primary)]', 'text-red-400');
       }
       
-      escutarPainelDados(); // Dashboard
-      escutarForum();       // Chat
-      carregarBlog();       // Puxa Histórico de Editais
-      renderizarCalendario(); // Cria a grade visual do calendário
+      escutarPainelDados(); 
+      escutarForum();       
+      carregarHub();       
+      renderizarCalendario(); 
 
     } else { window.location.href = "index.html"; }
   } else { window.location.href = "index.html"; }
@@ -35,11 +37,11 @@ onAuthStateChanged(auth, async (user) => {
 // ==========================================
 // 2. ROTEAMENTO SPA (Telas)
 // ==========================================
-const views = ['dashboard', 'blog', 'calendario', 'forum', 'admin'];
+const views = ['dashboard', 'hub', 'calendario', 'forum', 'admin'];
 const navs = {
   'dashboard': { btn: 'nav-inicio', titulo: 'Visão Geral' },
-  'blog': { btn: 'nav-blog', titulo: '<i class="fa-solid fa-newspaper mr-2 text-[var(--color-blue)]"></i> Mural Oficial & Editais' },
-  'calendario': { btn: 'nav-calendario', titulo: '<i class="fa-regular fa-calendar-days mr-2 text-[var(--color-blue)]"></i> Calendário Letivo' },
+  'hub': { btn: 'nav-hub', titulo: '<i class="fa-solid fa-layer-group mr-2 text-[var(--color-blue)]"></i> Hub de Editais IFPR' },
+  'calendario': { btn: 'nav-calendario', titulo: '<i class="fa-regular fa-calendar-days mr-2 text-[var(--color-blue)]"></i> Agenda Letiva' },
   'forum': { btn: 'nav-forum', titulo: '<i class="fa-solid fa-comments mr-2 text-[var(--color-blue)]"></i> Fórum da Turma' },
   'admin': { btn: 'nav-admin', titulo: '<span class="text-red-500"><i class="fa-solid fa-crown mr-2"></i> Liderança</span>' }
 };
@@ -47,7 +49,7 @@ const navs = {
 function trocarTela(telaAtiva) {
   views.forEach(view => {
     let el = document.getElementById(`view-${view}`);
-    if(view === telaAtiva) { el.classList.remove('hidden'); el.classList.add(view==='forum'||view==='calendario'||view==='blog' ? 'flex' : 'block'); }
+    if(view === telaAtiva) { el.classList.remove('hidden'); el.classList.add(view==='forum'||view==='calendario'||view==='hub' ? 'flex' : 'block'); }
     else { el.classList.add('hidden'); el.classList.remove('flex', 'block'); }
     
     const btn = document.getElementById(navs[view].btn);
@@ -63,106 +65,157 @@ function trocarTela(telaAtiva) {
 }
 
 document.getElementById('nav-inicio').addEventListener('click', (e) => { e.preventDefault(); trocarTela('dashboard'); });
-document.getElementById('nav-blog').addEventListener('click', (e) => { e.preventDefault(); trocarTela('blog'); });
+document.getElementById('nav-hub').addEventListener('click', (e) => { e.preventDefault(); trocarTela('hub'); });
 document.getElementById('nav-calendario').addEventListener('click', (e) => { e.preventDefault(); trocarTela('calendario'); });
 document.getElementById('nav-forum').addEventListener('click', (e) => { e.preventDefault(); trocarTela('forum'); });
 document.getElementById('nav-admin').addEventListener('click', (e) => { e.preventDefault(); trocarTela('admin'); });
 
 // ==========================================
-// 3. O BLOG / EDITAIS (Postagens Oficiais)
+// 3. O HUB DE EDITAIS E O BANNER
 // ==========================================
-function carregarBlog() {
-  const q = query(collection(db, "blog_posts"), orderBy("timestamp", "desc"));
+// Função para pintar as tags baseado na categoria
+function getCorTag(categoria) {
+  if(categoria === 'Bolsa/Auxílio') return 'text-green-400 bg-green-500/10 border-green-500/30';
+  if(categoria === 'Evento') return 'text-purple-400 bg-purple-500/10 border-purple-500/30';
+  if(categoria === 'Estágio/Emprego') return 'text-blue-400 bg-blue-500/10 border-blue-500/30';
+  return 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30'; // Comunicado
+}
+
+function carregarHub() {
+  const q = query(collection(db, "hub_editais"), orderBy("timestamp", "desc"));
   onSnapshot(q, (snapshot) => {
-    const lista = document.getElementById('lista-blog');
+    const lista = document.getElementById('lista-hub');
     lista.innerHTML = '';
-    if(snapshot.empty) { lista.innerHTML = '<div class="text-[var(--text-muted)] text-sm">Nenhuma postagem oficial ainda.</div>'; return; }
     
+    const bannerTag = document.getElementById('banner-tag');
+    const bannerTitulo = document.getElementById('banner-titulo');
+    const bannerTexto = document.getElementById('banner-texto');
+    const bannerBtn = document.getElementById('banner-btn-link');
+
+    if(snapshot.empty) { 
+      lista.innerHTML = '<div class="text-[var(--text-muted)] text-sm">Nenhum edital na vitrine.</div>'; 
+      bannerTag.innerHTML = '<i class="fa-solid fa-rocket mr-1"></i> PLATAFORMA CORE';
+      bannerTitulo.innerText = "Bem-vindo à sua central.";
+      bannerTexto.innerText = "Acompanhe a rotina da turma, acesse fóruns e fique por dentro dos editais.";
+      bannerBtn.classList.add('hidden'); // Esconde o botão de link se não tem edital
+      return; 
+    }
+    
+    // Alimenta o Banner com o post mais recente
+    const ultimoPost = snapshot.docs[0].data();
+    bannerTag.innerHTML = `<i class="fa-solid fa-thumbtack mr-1"></i> DESTAQUE: ${ultimoPost.categoria.toUpperCase()}`;
+    bannerTitulo.innerText = ultimoPost.titulo;
+    bannerTexto.innerText = ultimoPost.texto;
+    
+    if(ultimoPost.link) {
+      bannerBtn.href = ultimoPost.link;
+      bannerBtn.classList.remove('hidden');
+      bannerBtn.classList.add('inline-flex');
+    } else {
+      bannerBtn.classList.add('hidden');
+    }
+
+    // Alimenta a lista inteira do Hub
     snapshot.forEach((doc) => {
       const post = doc.data();
-      // Formata a data bonitinha
       const dataStr = post.timestamp ? new Date(post.timestamp.toDate()).toLocaleDateString('pt-BR', {day:'2-digit', month:'short', year:'numeric'}) : 'Agora';
+      const cssTag = getCorTag(post.categoria);
       
+      let btnLink = post.link ? `<a href="${post.link}" target="_blank" class="mt-4 inline-flex items-center gap-2 bg-[var(--color-blue)] hover:bg-[#0f4396] text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-colors"><i class="fa-solid fa-link"></i> Acessar Edital Oficial</a>` : '';
+
       lista.innerHTML += `
         <article class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6 shadow-sm">
-          <div class="flex justify-between items-center mb-3">
+          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-3">
             <h2 class="text-xl font-bold text-white">${post.titulo}</h2>
-            <span class="text-xs font-bold text-[var(--color-primary)] bg-green-500/10 px-3 py-1 rounded-full"><i class="fa-solid fa-thumbtack mr-1"></i> Oficial</span>
+            <span class="text-xs font-bold px-3 py-1 rounded-full border self-start sm:self-center ${cssTag}">${post.categoria}</span>
           </div>
           <p class="text-[var(--text-muted)] text-sm whitespace-pre-wrap leading-relaxed mb-4">${post.texto}</p>
-          <div class="text-xs text-gray-500 font-semibold border-t border-[var(--border-dark)] pt-3"><i class="fa-regular fa-calendar mr-1"></i> Publicado em ${dataStr} pela Liderança</div>
+          ${btnLink}
+          <div class="text-xs text-gray-500 font-semibold border-t border-[var(--border-dark)] pt-3 mt-4"><i class="fa-regular fa-calendar mr-1"></i> Lançado na Vitrine em ${dataStr}</div>
         </article>
       `;
     });
   });
 }
 
-window.postarBlog = async () => {
-  const titulo = document.getElementById('blog-titulo').value.trim();
-  const texto = document.getElementById('blog-texto').value.trim();
-  if(!titulo || !texto) { alert("Preencha título e texto do Edital."); return; }
+window.postarHub = async () => {
+  const titulo = document.getElementById('hub-titulo').value.trim();
+  const categoria = document.getElementById('hub-categoria').value;
+  const texto = document.getElementById('hub-texto').value.trim();
+  const link = document.getElementById('hub-link').value.trim();
+
+  if(!titulo || !texto) { alert("Preencha título e o resumo do edital."); return; }
 
   try {
-    await addDoc(collection(db, "blog_posts"), { titulo: titulo, texto: texto, timestamp: serverTimestamp() });
-    document.getElementById('blog-titulo').value = ''; document.getElementById('blog-texto').value = '';
-    alert("✅ Postagem Oficial publicada com sucesso! Todos já podem ver.");
+    await addDoc(collection(db, "hub_editais"), { 
+      titulo: titulo, categoria: categoria, texto: texto, link: link, timestamp: serverTimestamp() 
+    });
+    document.getElementById('hub-titulo').value = ''; document.getElementById('hub-texto').value = ''; document.getElementById('hub-link').value = '';
+    alert("✅ Edital lançado no Hub com sucesso!");
   } catch(e) { console.error(e); alert("Erro ao postar."); }
 };
 
 // ==========================================
-// 4. O CALENDÁRIO 2026 (Grade Base)
+// 4. CALENDÁRIO CLICÁVEL 2026
 // ==========================================
-let mesAtual = new Date().getMonth(); // 0 a 11
-let anoAtual = new Date().getFullYear(); // Ex: 2026
+let mesAtual = new Date().getMonth(); let anoAtual = new Date().getFullYear(); 
 const mesesNomes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 function renderizarCalendario() {
   const grid = document.getElementById('calendario-grade');
   const titulo = document.getElementById('mes-atual-titulo');
-  
-  grid.innerHTML = '';
   titulo.innerText = `${mesesNomes[mesAtual]} ${anoAtual}`;
 
-  // Descobre em qual dia da semana (0-Dom, 6-Sáb) o mês começa, e quantos dias o mês tem
   const primeiroDia = new Date(anoAtual, mesAtual, 1).getDay();
   const diasNoMes = new Date(anoAtual, mesAtual + 1, 0).getDate();
-
-  // Cria espaços vazios antes do dia 1
-  for (let i = 0; i < primeiroDia; i++) {
-    grid.innerHTML += `<div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded p-2 opacity-30"></div>`;
-  }
-
-  // Cria os dias do mês
   const hoje = new Date();
-  for (let dia = 1; dia <= diasNoMes; dia++) {
-    // Marca em azul se for o dia de hoje
-    let ehHoje = (dia === hoje.getDate() && mesAtual === hoje.getMonth() && anoAtual === hoje.getFullYear());
-    let corBorda = ehHoje ? 'border-[var(--color-blue)] bg-[#0f4396]/20' : 'border-[var(--border-dark)] bg-[#2a2a2e] hover:border-[var(--text-muted)]';
-    let corTexto = ehHoje ? 'text-white' : 'text-[var(--text-muted)]';
+  
+  onSnapshot(collection(db, "calendario"), (snapshot) => {
+    let eventosMes = {};
+    snapshot.forEach(doc => { eventosMes[doc.id] = doc.data().texto; });
 
-    grid.innerHTML += `
-      <div class="border rounded p-2 text-right transition-colors relative h-16 sm:h-24 ${corBorda} cursor-pointer">
-        <span class="font-bold text-sm ${corTexto}">${dia}</span>
-        <div class="eventos-dia absolute bottom-2 left-2 right-2 flex flex-col gap-1"></div>
-      </div>
-    `;
-  }
+    grid.innerHTML = ''; 
+    for (let i = 0; i < primeiroDia; i++) grid.innerHTML += `<div class="bg-transparent border border-transparent"></div>`; 
+
+    for (let dia = 1; dia <= diasNoMes; dia++) {
+      let dataId = `${anoAtual}-${mesAtual}-${dia}`;
+      let temEvento = eventosMes[dataId];
+      let ehHoje = (dia === hoje.getDate() && mesAtual === hoje.getMonth() && anoAtual === hoje.getFullYear());
+      let corFundo = ehHoje ? 'bg-[var(--color-blue)] border-[var(--color-blue)]' : 'bg-[#2a2a2e] border-[var(--border-dark)] hover:border-[var(--color-blue)]';
+      let tagHTML = temEvento ? `<div class="mt-1 text-[10px] sm:text-xs leading-tight font-bold bg-yellow-500 text-black px-1 rounded line-clamp-2">${temEvento}</div>` : '';
+      let clickEvent = isAdmin ? `onclick="addEventoCalendario('${dataId}', '${dia}/${mesAtual+1}/${anoAtual}', '${temEvento || ''}')"` : '';
+      let cursorClass = isAdmin ? 'cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all' : '';
+
+      grid.innerHTML += `
+        <div ${clickEvent} class="border rounded p-1 sm:p-2 flex flex-col ${corFundo} ${cursorClass}">
+          <span class="font-bold text-xs sm:text-sm text-right ${ehHoje ? 'text-white' : 'text-gray-300'}">${dia}</span>
+          ${tagHTML}
+        </div>
+      `;
+    }
+  });
 }
-
+window.addEventoCalendario = async (docId, dataFormatada, eventoAtual) => {
+  const novoEvento = prompt(`Liderança: Adicionar aviso/prova para o dia ${dataFormatada}:\n(Deixe em branco e dê OK para apagar o atual)`, eventoAtual);
+  if (novoEvento !== null) { 
+    if (novoEvento.trim() === "") await deleteDoc(doc(db, "calendario", docId)); 
+    else await setDoc(doc(db, "calendario", docId), { texto: novoEvento.substring(0, 40) }); 
+  }
+};
 document.getElementById('btn-mes-ant').addEventListener('click', () => { mesAtual--; if(mesAtual < 0) { mesAtual = 11; anoAtual--; } renderizarCalendario(); });
 document.getElementById('btn-mes-prox').addEventListener('click', () => { mesAtual++; if(mesAtual > 11) { mesAtual = 0; anoAtual++; } renderizarCalendario(); });
 
 // ==========================================
-// 5. CHAT AO VIVO
+// 5. CHAT, DASHBOARD DIÁRIO E ALUNOS
 // ==========================================
 function escutarForum() {
   const q = query(collection(db, "forum_mensagens"), orderBy("timestamp", "asc"));
   onSnapshot(q, (snapshot) => {
     const chatBox = document.getElementById('chat-box'); chatBox.innerHTML = '';
-    if(snapshot.empty) { chatBox.innerHTML = '<div class="text-center text-[var(--text-muted)] mt-10">Dê o primeiro salve da turma!</div>'; return; }
+    if(snapshot.empty) { chatBox.innerHTML = '<div class="text-center text-[var(--text-muted)] mt-10">Mande o primeiro salve da turma!</div>'; return; }
     snapshot.forEach((doc) => {
       const msg = doc.data(); const isMe = msg.autor === usuarioAtualNome;
-      chatBox.innerHTML += `<div class="mb-3"><div class="inline-block p-3 rounded-xl border ${isMe ? 'bg-[var(--color-blue)]/10 border-[var(--color-blue)]/30' : 'bg-[#2a2a2e] border-[var(--border-dark)]'} text-sm"><span class="font-bold text-xs block mb-1 ${isMe ? 'text-[var(--color-blue)]' : 'text-[var(--color-primary)]'}">${msg.autor}</span><span class="text-white">${msg.texto}</span></div></div>`;
+      chatBox.innerHTML += `<div class="mb-3"><div class="inline-block p-3 rounded-xl border ${isMe ? 'bg-[var(--color-blue)]/10 border-[var(--color-blue)]/30' : 'bg-[#2a2a2e] border-[var(--border-dark)]'} text-sm"><span class="font-bold text-xs block mb-1 ${isMe ? 'text-[var(--color-blue)]' : 'text-[var(--color-primary)]'}">${msg.autor}</span><span class="text-white">${msg.texto.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-[var(--color-blue)] hover:underline font-bold">Link</a>')}</span></div></div>`;
     });
     chatBox.scrollTop = chatBox.scrollHeight;
   });
@@ -172,9 +225,6 @@ window.enviarMensagem = async () => {
   try { input.value = ''; await addDoc(collection(db, "forum_mensagens"), { texto: texto, autor: usuarioAtualNome, timestamp: serverTimestamp() }); } catch(e) {}
 };
 
-// ==========================================
-// 6. DASHBOARD DIÁRIO
-// ==========================================
 function escutarPainelDados() {
   onSnapshot(doc(db, "painel_dados", "geral"), (documento) => {
     if (documento.exists()) {
@@ -184,8 +234,8 @@ function escutarPainelDados() {
       document.getElementById('dash-hora2').innerText = dados.hora2 || '--:--'; document.getElementById('dash-aula2').innerText = dados.aula2 || '...';
       document.getElementById('dash-tarefa').innerText = dados.tarefas || 'Nenhuma atividade extra.';
       document.getElementById('dash-aviso-titulo').innerText = dados.aviso_titulo || 'Aviso'; document.getElementById('dash-aviso-texto').innerText = dados.aviso_texto || '...';
-      const vCafe = parseFloat(dados.cafe_valor) || 0; const mCafe = parseFloat(dados.cafe_meta) || 1;
-      let p = (vCafe / mCafe) * 100; if (p > 100) p = 100;
+      
+      const vCafe = parseFloat(dados.cafe_valor) || 0; const mCafe = parseFloat(dados.cafe_meta) || 1; let p = (vCafe / mCafe) * 100; if (p > 100) p = 100;
       document.getElementById('dash-cafe-valor').innerText = `R$ ${vCafe}`; document.getElementById('dash-cafe-meta').innerText = `Meta: R$ ${mCafe}`; document.getElementById('dash-cafe-barra').style.width = `${p}%`;
       
       document.getElementById('edit-dia').value = dados.horario_dia || '';
@@ -198,27 +248,16 @@ function escutarPainelDados() {
   });
 }
 window.salvarPainel = async () => {
-  const dados = {
-    horario_dia: document.getElementById('edit-dia').value,
-    hora1: document.getElementById('edit-hora1').value, aula1: document.getElementById('edit-aula1').value,
-    hora2: document.getElementById('edit-hora2').value, aula2: document.getElementById('edit-aula2').value,
-    tarefas: document.getElementById('edit-tarefa').value,
-    aviso_titulo: document.getElementById('edit-aviso-titulo').value, aviso_texto: document.getElementById('edit-aviso-texto').value,
-    cafe_valor: document.getElementById('edit-cafe-valor').value, cafe_meta: document.getElementById('edit-cafe-meta').value,
-  };
-  try { await setDoc(doc(db, "painel_dados", "geral"), dados, { merge: true }); alert("🚀 Painel diário atualizado!"); } catch (e) { alert("Erro ao salvar."); }
+  const dados = { horario_dia: document.getElementById('edit-dia').value, hora1: document.getElementById('edit-hora1').value, aula1: document.getElementById('edit-aula1').value, hora2: document.getElementById('edit-hora2').value, aula2: document.getElementById('edit-aula2').value, tarefas: document.getElementById('edit-tarefa').value, aviso_titulo: document.getElementById('edit-aviso-titulo').value, aviso_texto: document.getElementById('edit-aviso-texto').value, cafe_valor: document.getElementById('edit-cafe-valor').value, cafe_meta: document.getElementById('edit-cafe-meta').value };
+  try { await setDoc(doc(db, "painel_dados", "geral"), dados, { merge: true }); alert("🚀 Painel diário atualizado!"); } catch (e) {}
 };
 
-// ==========================================
-// 7. GESTÃO DE ALUNOS
-// ==========================================
 async function carregarAlunos() {
   const lista = document.getElementById('lista-pendentes');
   try {
     const qs = await getDocs(collection(db, "alunos")); lista.innerHTML = ''; 
     qs.forEach((d) => {
-      const a = d.data(); const id = d.id;
-      const tr = document.createElement('tr'); tr.className = "border-t border-[var(--border-dark)]";
+      const a = d.data(); const id = d.id; const tr = document.createElement('tr'); tr.className = "border-t border-[var(--border-dark)] hover:bg-[#2a2a2e]/50";
       let bStatus = a.status === 'aprovado' ? `<span class="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">Aprovado</span>` : `<span class="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs font-bold">Pendente</span>`;
       let btn = a.status === 'pendente' 
         ? `<button onclick="aprovarAluno('${id}')" class="bg-[var(--color-primary)] text-white w-8 h-8 rounded"><i class="fa-solid fa-check"></i></button><button onclick="removerAluno('${id}')" class="bg-red-500 text-white w-8 h-8 rounded"><i class="fa-solid fa-xmark"></i></button>`
