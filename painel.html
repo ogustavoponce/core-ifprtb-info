@@ -22,8 +22,6 @@
       --color-blue: #1351b4; 
     }
     body { background-color: var(--bg-puro); color: var(--text-main); }
-    
-    /* Scrollbar customizada para o menu lateral */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg-puro); }
     ::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 10px; }
@@ -39,7 +37,7 @@
     <nav class="flex-1 overflow-y-auto py-4">
       <ul class="space-y-1 px-3">
         <li>
-          <a href="#" class="flex items-center gap-3 px-3 py-2.5 bg-[var(--color-blue)] text-white rounded-lg font-semibold text-sm transition-colors">
+          <a href="#" id="nav-inicio" class="flex items-center gap-3 px-3 py-2.5 bg-[var(--color-blue)] text-white rounded-lg font-semibold text-sm transition-colors">
             <i class="fa-solid fa-house w-5"></i> Início
           </a>
         </li>
@@ -58,6 +56,12 @@
             <i class="fa-solid fa-mug-hot w-5"></i> Fundo do Café
           </a>
         </li>
+        
+        <li id="menu-admin" class="hidden mt-4">
+          <a href="#" id="nav-admin" class="flex items-center gap-3 px-3 py-2.5 text-red-400 hover:text-white hover:bg-red-400/10 border border-red-400/20 rounded-lg font-bold text-sm transition-colors shadow-sm">
+            <i class="fa-solid fa-crown w-5"></i> Gestão da Turma
+          </a>
+        </li>
       </ul>
     </nav>
 
@@ -72,16 +76,13 @@
     
     <header class="h-16 bg-[var(--bg-card)] border-b border-[var(--border-dark)] flex items-center justify-between px-6 lg:px-10">
       <div class="flex items-center gap-4">
-        <button class="md:hidden text-[var(--text-muted)] hover:text-white">
-          <i class="fa-solid fa-bars text-xl"></i>
-        </button>
-        <h2 class="text-lg font-bold">Visão Geral</h2>
+        <h2 id="titulo-pagina" class="text-lg font-bold">Visão Geral</h2>
       </div>
       
       <div class="flex items-center gap-3">
         <div class="text-right hidden sm:block">
           <p id="user-name" class="text-sm font-bold text-white">Carregando...</p>
-          <p class="text-xs text-[var(--color-primary)] font-semibold">Aluno Verificado</p>
+          <p id="user-role" class="text-xs text-[var(--color-primary)] font-semibold">Aluno Verificado</p>
         </div>
         <div class="h-10 w-10 bg-[var(--color-blue)] rounded-full flex items-center justify-center text-white font-bold border-2 border-[var(--border-dark)] shadow-sm">
           <i class="fa-solid fa-user"></i>
@@ -89,62 +90,69 @@
       </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto p-6 lg:p-10">
+    <main class="flex-1 overflow-y-auto p-6 lg:p-10 relative">
       
-      <div class="w-full bg-gradient-to-r from-[var(--color-blue)] to-[#0f4396] rounded-xl p-6 lg:p-8 mb-8 shadow-lg relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-        <div class="relative z-10">
-          <h1 class="text-2xl lg:text-3xl font-extrabold text-white mb-2 tracking-tight">Bem-vindo ao CORE.</h1>
-          <p class="text-blue-100 text-sm max-w-2xl font-light">
-            Sua central de gestão estudantil. Fique por dentro dos horários, anúncios importantes da liderança e projetos da turma de Informática para Internet.
-          </p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        
-        <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6 hover:border-[var(--text-muted)] transition-colors">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="font-bold text-lg"><i class="fa-regular fa-clock text-[var(--color-blue)] mr-2"></i> Hoje no IFPR</h3>
-            <span class="text-xs font-bold bg-[#2a2a2e] px-2 py-1 rounded text-[var(--text-muted)]">Terça</span>
-          </div>
-          <ul class="space-y-3 text-sm">
-            <li class="flex justify-between items-center border-b border-[var(--border-dark)] pb-2">
-              <span class="text-[var(--text-muted)]">19:00 - 20:30</span>
-              <span class="font-semibold text-white">Lógica de Prog.</span>
-            </li>
-            <li class="flex justify-between items-center border-b border-[var(--border-dark)] pb-2">
-              <span class="text-[var(--text-muted)]">20:45 - 22:30</span>
-              <span class="font-semibold text-white">Design Web</span>
-            </li>
-          </ul>
-        </div>
-
-        <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6 hover:border-[var(--text-muted)] transition-colors">
-          <h3 class="font-bold text-lg mb-4"><i class="fa-solid fa-thumbtack text-red-400 mr-2"></i> Mural da Turma</h3>
-          <div class="bg-[#2a2a2e] rounded-lg p-4 border-l-4 border-red-400">
-            <h4 class="text-sm font-bold text-white mb-1">Apresentação Cancelada</h4>
-            <p class="text-xs text-[var(--text-muted)] leading-relaxed">
-              A apresentação do projeto que ocorreria hoje foi transferida para a próxima semana.
+      <div id="view-dashboard" class="block">
+        <div class="w-full bg-gradient-to-r from-[var(--color-blue)] to-[#0f4396] rounded-xl p-6 lg:p-8 mb-8 shadow-lg relative overflow-hidden">
+          <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+          <div class="relative z-10">
+            <h1 class="text-2xl lg:text-3xl font-extrabold text-white mb-2 tracking-tight">Bem-vindo ao CORE.</h1>
+            <p class="text-blue-100 text-sm max-w-2xl font-light">
+              Sua central de gestão estudantil. Fique por dentro dos horários, anúncios importantes da liderança e projetos da turma de Informática para Internet.
             </p>
           </div>
         </div>
 
-        <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6 hover:border-[var(--text-muted)] transition-colors">
-          <h3 class="font-bold text-lg mb-4"><i class="fa-solid fa-mug-hot text-[#d97706] mr-2"></i> Campanha do Café</h3>
-          <p class="text-sm text-[var(--text-muted)] mb-4">
-            A arrecadação mensal para manter nossa garrafa térmica abastecida está aberta!
-          </p>
-          <div class="w-full bg-[#2a2a2e] rounded-full h-2.5 mb-2">
-            <div class="bg-[#d97706] h-2.5 rounded-full" style="width: 70%"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6 hover:border-[var(--text-muted)] transition-colors">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-bold text-lg"><i class="fa-regular fa-clock text-[var(--color-blue)] mr-2"></i> Hoje no IFPR</h3>
+              <span class="text-xs font-bold bg-[#2a2a2e] px-2 py-1 rounded text-[var(--text-muted)]">Terça</span>
+            </div>
+            <ul class="space-y-3 text-sm">
+              <li class="flex justify-between items-center border-b border-[var(--border-dark)] pb-2"><span class="text-[var(--text-muted)]">19:00 - 20:30</span><span class="font-semibold text-white">Lógica de Prog.</span></li>
+              <li class="flex justify-between items-center border-b border-[var(--border-dark)] pb-2"><span class="text-[var(--text-muted)]">20:45 - 22:30</span><span class="font-semibold text-white">Design Web</span></li>
+            </ul>
           </div>
-          <div class="flex justify-between text-xs font-bold text-[var(--text-muted)]">
-            <span>Arrecadado: R$ 35</span>
-            <span>Meta: R$ 50</span>
+
+          <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6 hover:border-[var(--text-muted)] transition-colors">
+            <h3 class="font-bold text-lg mb-4"><i class="fa-solid fa-thumbtack text-red-400 mr-2"></i> Mural da Turma</h3>
+            <div class="bg-[#2a2a2e] rounded-lg p-4 border-l-4 border-red-400">
+              <h4 class="text-sm font-bold text-white mb-1">Apresentação Cancelada</h4>
+              <p class="text-xs text-[var(--text-muted)] leading-relaxed">A apresentação do projeto que ocorreria hoje foi transferida para a próxima semana.</p>
+            </div>
+          </div>
+
+          <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6 hover:border-[var(--text-muted)] transition-colors">
+            <h3 class="font-bold text-lg mb-4"><i class="fa-solid fa-mug-hot text-[#d97706] mr-2"></i> Campanha do Café</h3>
+            <p class="text-sm text-[var(--text-muted)] mb-4">A arrecadação mensal para manter nossa garrafa térmica abastecida está aberta!</p>
+            <div class="w-full bg-[#2a2a2e] rounded-full h-2.5 mb-2"><div class="bg-[#d97706] h-2.5 rounded-full" style="width: 70%"></div></div>
+            <div class="flex justify-between text-xs font-bold text-[var(--text-muted)]"><span>Arrecadado: R$ 35</span><span>Meta: R$ 50</span></div>
           </div>
         </div>
-
       </div>
+
+      <div id="view-admin" class="hidden">
+        <h1 class="text-2xl font-extrabold mb-2 text-white">Controle da Turma</h1>
+        <p class="text-[var(--text-muted)] text-sm mb-8">Aprove solicitações, edite nomes e redefina senhas.</p>
+
+        <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl overflow-hidden shadow-lg">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#2a2a2e] text-[var(--text-muted)] text-xs uppercase tracking-wider">
+                <th class="p-4 font-bold">Aluno</th>
+                <th class="p-4 font-bold">E-mail</th>
+                <th class="p-4 font-bold text-center">Status</th>
+                <th class="p-4 font-bold text-center">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="lista-pendentes" class="text-sm">
+              <tr><td colspan="4" class="p-8 text-center text-[var(--text-muted)]">Aguarde...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </main>
   </div>
 
