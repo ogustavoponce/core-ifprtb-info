@@ -1,5 +1,5 @@
 import { onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-import { doc, getDoc, collection, getDocs, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { doc, getDoc, collection, getDocs, updateDoc, deleteDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { auth, db } from "./firebase-config.js";
 
 const EMAIL_ADMIN = "gustavo.ponce.ifpr@gmail.com"; 
@@ -13,26 +13,28 @@ onAuthStateChanged(auth, async (user) => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists() && docSnap.data().status === 'aprovado') {
-      // Bota o nome do caboclo na tela
       const nomeElement = document.getElementById('user-name');
       if(nomeElement) nomeElement.innerText = user.displayName || docSnap.data().nome;
 
-      // Se for o Presidente (Você), liga o modo Deus
       if (user.email === EMAIL_ADMIN) {
         document.getElementById('menu-admin').classList.remove('hidden');
         document.getElementById('user-role').innerText = "Presidente / Admin";
         document.getElementById('user-role').classList.replace('text-[var(--color-primary)]', 'text-red-400');
       }
+      
+      // INICIA O MOTOR DE ESCUTA EM TEMPO REAL DO PAINEL!
+      escutarPainelDados();
+
     } else {
-      window.location.href = "index.html"; // Chuta se não tiver aprovado
+      window.location.href = "index.html"; 
     }
   } else {
-    window.location.href = "index.html"; // Chuta se não tiver logado
+    window.location.href = "index.html"; 
   }
 });
 
 // ==========================================
-// 2. NAVEGAÇÃO ENTRE AS ABAS (Single Page)
+// 2. NAVEGAÇÃO SPA
 // ==========================================
 const navInicio = document.getElementById('nav-inicio');
 const navAdmin = document.getElementById('nav-admin');
@@ -40,44 +42,91 @@ const viewDashboard = document.getElementById('view-dashboard');
 const viewAdmin = document.getElementById('view-admin');
 const tituloPagina = document.getElementById('titulo-pagina');
 
-// Clicou no Início
 navInicio.addEventListener('click', (e) => {
   e.preventDefault();
-  viewDashboard.classList.remove('hidden');
-  viewAdmin.classList.add('hidden');
-  
-  // Muda o botão que tá selecionado de cor
-  navInicio.classList.add('bg-[var(--color-blue)]', 'text-white');
-  navInicio.classList.remove('text-[var(--text-muted)]', 'hover:bg-[#2a2a2e]');
-  
-  navAdmin.classList.remove('bg-red-500/10', 'text-white');
-  navAdmin.classList.add('text-red-400');
-  
+  viewDashboard.classList.remove('hidden'); viewAdmin.classList.add('hidden');
+  navInicio.classList.add('bg-[var(--color-blue)]', 'text-white'); navInicio.classList.remove('text-[var(--text-muted)]', 'hover:bg-[#2a2a2e]');
+  navAdmin.classList.remove('bg-red-500/10', 'text-white'); navAdmin.classList.add('text-red-400');
   tituloPagina.innerText = "Visão Geral";
 });
 
-// Clicou na Gestão da Turma
 navAdmin.addEventListener('click', (e) => {
   e.preventDefault();
-  viewDashboard.classList.add('hidden');
-  viewAdmin.classList.remove('hidden');
-  
-  // Muda o botão que tá selecionado de cor
-  navAdmin.classList.add('bg-red-500/10', 'text-white');
-  navAdmin.classList.remove('text-red-400');
-  
-  navInicio.classList.remove('bg-[var(--color-blue)]', 'text-white');
-  navInicio.classList.add('text-[var(--text-muted)]', 'hover:bg-[#2a2a2e]');
-  
+  viewDashboard.classList.add('hidden'); viewAdmin.classList.remove('hidden');
+  navAdmin.classList.add('bg-red-500/10', 'text-white'); navAdmin.classList.remove('text-red-400');
+  navInicio.classList.remove('bg-[var(--color-blue)]', 'text-white'); navInicio.classList.add('text-[var(--text-muted)]', 'hover:bg-[#2a2a2e]');
   tituloPagina.innerHTML = "<span class='text-red-500'><i class='fa-solid fa-crown mr-2'></i> Painel da Liderança</span>";
-  
-  // Carrega os alunos só na hora que abre a aba!
   carregarAlunos(); 
 });
 
+// ==========================================
+// 3. O MOTOR EM TEMPO REAL (Mural, Horários, Café)
+// ==========================================
+function escutarPainelDados() {
+  // O onSnapshot fica olhando o banco 24h por dia
+  onSnapshot(doc(db, "painel_dados", "geral"), (documento) => {
+    if (documento.exists()) {
+      const dados = documento.data();
+      
+      // Atualiza o Dashboard para os Alunos
+      document.getElementById('dash-dia').innerText = dados.horario_dia || 'Hoje';
+      document.getElementById('dash-hora1').innerText = dados.hora1 || '--:--';
+      document.getElementById('dash-aula1').innerText = dados.aula1 || '...';
+      document.getElementById('dash-hora2').innerText = dados.hora2 || '--:--';
+      document.getElementById('dash-aula2').innerText = dados.aula2 || '...';
+      
+      document.getElementById('dash-aviso-titulo').innerText = dados.aviso_titulo || 'Mural Vazio';
+      document.getElementById('dash-aviso-texto').innerText = dados.aviso_texto || 'Nenhum recado da liderança no momento.';
+      
+      const vCafe = parseFloat(dados.cafe_valor) || 0;
+      const mCafe = parseFloat(dados.cafe_meta) || 1;
+      let porcentagem = (vCafe / mCafe) * 100;
+      if (porcentagem > 100) porcentagem = 100; // Limita a barra
+      
+      document.getElementById('dash-cafe-valor').innerText = `R$ ${vCafe}`;
+      document.getElementById('dash-cafe-meta').innerText = `Meta: R$ ${mCafe}`;
+      document.getElementById('dash-cafe-barra').style.width = `${porcentagem}%`;
+
+      // Preenche também os campos lá no Admin (pra você não ter que digitar tudo de novo)
+      document.getElementById('edit-dia').value = dados.horario_dia || '';
+      document.getElementById('edit-hora1').value = dados.hora1 || '';
+      document.getElementById('edit-aula1').value = dados.aula1 || '';
+      document.getElementById('edit-hora2').value = dados.hora2 || '';
+      document.getElementById('edit-aula2').value = dados.aula2 || '';
+      document.getElementById('edit-aviso-titulo').value = dados.aviso_titulo || '';
+      document.getElementById('edit-aviso-texto').value = dados.aviso_texto || '';
+      document.getElementById('edit-cafe-valor').value = dados.cafe_valor || '';
+      document.getElementById('edit-cafe-meta').value = dados.cafe_meta || '';
+    }
+  });
+}
+
+// Salva as alterações feitas por você no Admin
+window.salvarPainel = async () => {
+  const dados = {
+    horario_dia: document.getElementById('edit-dia').value,
+    hora1: document.getElementById('edit-hora1').value,
+    aula1: document.getElementById('edit-aula1').value,
+    hora2: document.getElementById('edit-hora2').value,
+    aula2: document.getElementById('edit-aula2').value,
+    aviso_titulo: document.getElementById('edit-aviso-titulo').value,
+    aviso_texto: document.getElementById('edit-aviso-texto').value,
+    cafe_valor: document.getElementById('edit-cafe-valor').value,
+    cafe_meta: document.getElementById('edit-cafe-meta').value,
+  };
+
+  try {
+    // Escreve ou atualiza o documento "geral" na coleção "painel_dados"
+    await setDoc(doc(db, "painel_dados", "geral"), dados, { merge: true });
+    alert("🚀 Painel atualizado para todos os alunos em tempo real!");
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao salvar. Verifique se as regras do Firestore estão corretas.");
+  }
+};
 
 // ==========================================
-// 3. O MOTOR DA TABELA DE ADMINISTRAÇÃO
+// 4. GESTÃO DE ALUNOS (O mesmo de antes)
 // ==========================================
 async function carregarAlunos() {
   const lista = document.getElementById('lista-pendentes');
@@ -85,13 +134,7 @@ async function carregarAlunos() {
 
   try {
     const querySnapshot = await getDocs(collection(db, "alunos"));
-
-    if (querySnapshot.empty) {
-      lista.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-[var(--text-muted)]">Nenhum aluno cadastrado.</td></tr>`;
-      return;
-    }
-
-    lista.innerHTML = ''; // Limpa antes de preencher
+    lista.innerHTML = ''; 
 
     querySnapshot.forEach((documento) => {
       const aluno = documento.data();
@@ -120,40 +163,14 @@ async function carregarAlunos() {
     });
   } catch (error) {
     console.error(error);
-    lista.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-red-400">Erro de conexão com o Banco de Dados.</td></tr>`;
   }
 }
 
-// Funções dos botões (Globais para o HTML rodar)
-window.aprovarAluno = async (id) => {
-  if(confirm("Liberar acesso?")) {
-    await updateDoc(doc(db, "alunos", id), { status: 'aprovado' });
-    carregarAlunos(); 
-  }
-};
-window.removerAluno = async (id) => {
-  if(confirm("Apagar aluno do sistema permanentemente?")) {
-    await deleteDoc(doc(db, "alunos", id));
-    carregarAlunos(); 
-  }
-};
-window.editarNome = async (id, nomeAtual) => {
-  const novoNome = prompt("Corrija o nome:", nomeAtual);
-  if (novoNome && novoNome.trim() !== "" && novoNome !== nomeAtual) {
-    await updateDoc(doc(db, "alunos", id), { nome: novoNome });
-    carregarAlunos();
-  }
-};
-window.resetarSenha = async (email) => {
-  if(confirm(`Enviar e-mail oficial de redefinição para ${email}?`)) {
-    try {
-      await sendPasswordResetEmail(auth, email);
-      alert("Enviado com sucesso!");
-    } catch (e) { alert("Erro ao enviar o e-mail."); }
-  }
-};
+window.aprovarAluno = async (id) => { if(confirm("Liberar acesso?")) { await updateDoc(doc(db, "alunos", id), { status: 'aprovado' }); carregarAlunos(); } };
+window.removerAluno = async (id) => { if(confirm("Apagar aluno do sistema permanentemente?")) { await deleteDoc(doc(db, "alunos", id)); carregarAlunos(); } };
+window.editarNome = async (id, nomeAtual) => { const novoNome = prompt("Corrija o nome:", nomeAtual); if (novoNome && novoNome.trim() !== "" && novoNome !== nomeAtual) { await updateDoc(doc(db, "alunos", id), { nome: novoNome }); carregarAlunos(); } };
+window.resetarSenha = async (email) => { if(confirm(`Enviar e-mail de redefinição para ${email}?`)) { try { await sendPasswordResetEmail(auth, email); alert("Enviado com sucesso!"); } catch (e) { alert("Erro ao enviar o e-mail."); } } };
 
-// Botão de Sair Global
 document.getElementById('btn-sair').addEventListener('click', async () => {
   await signOut(auth);
   window.location.href = "index.html"; 

@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CORE - Painel de Controle</title>
-  
   <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -13,13 +12,8 @@
   <style>
     body { font-family: 'Open Sans', sans-serif; }
     :root {
-      --bg-puro: #121214;         
-      --bg-card: #1a1a1e;         
-      --border-dark: #323238;    
-      --text-main: #F8F8F8;      
-      --text-muted: #8D8D99;     
-      --color-primary: #2F9E41;  
-      --color-blue: #1351b4; 
+      --bg-puro: #121214; --bg-card: #1a1a1e; --border-dark: #323238;    
+      --text-main: #F8F8F8; --text-muted: #8D8D99; --color-primary: #2F9E41; --color-blue: #1351b4; 
     }
     body { background-color: var(--bg-puro); color: var(--text-main); }
     ::-webkit-scrollbar { width: 6px; }
@@ -33,60 +27,30 @@
     <div class="h-16 flex items-center px-6 border-b border-[var(--border-dark)]">
       <img src="assets/img/logo.png" alt="Logo CORE" class="h-8 w-auto">
     </div>
-    
     <nav class="flex-1 overflow-y-auto py-4">
       <ul class="space-y-1 px-3">
-        <li>
-          <a href="#" id="nav-inicio" class="flex items-center gap-3 px-3 py-2.5 bg-[var(--color-blue)] text-white rounded-lg font-semibold text-sm transition-colors">
-            <i class="fa-solid fa-house w-5"></i> Início
-          </a>
-        </li>
-        <li>
-          <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-[var(--text-muted)] hover:text-white hover:bg-[#2a2a2e] rounded-lg font-semibold text-sm transition-colors">
-            <i class="fa-regular fa-calendar-days w-5"></i> Horários das Aulas
-          </a>
-        </li>
-        <li>
-          <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-[var(--text-muted)] hover:text-white hover:bg-[#2a2a2e] rounded-lg font-semibold text-sm transition-colors">
-            <i class="fa-solid fa-bullhorn w-5"></i> Comunicados
-          </a>
-        </li>
-        <li>
-          <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-[var(--text-muted)] hover:text-white hover:bg-[#2a2a2e] rounded-lg font-semibold text-sm transition-colors">
-            <i class="fa-solid fa-mug-hot w-5"></i> Fundo do Café
-          </a>
-        </li>
+        <li><a href="#" id="nav-inicio" class="flex items-center gap-3 px-3 py-2.5 bg-[var(--color-blue)] text-white rounded-lg font-semibold text-sm transition-colors"><i class="fa-solid fa-house w-5"></i> Início</a></li>
+        <li><a href="#" class="flex items-center gap-3 px-3 py-2.5 text-[var(--text-muted)] hover:text-white hover:bg-[#2a2a2e] rounded-lg font-semibold text-sm transition-colors"><i class="fa-regular fa-calendar-days w-5"></i> Horários das Aulas</a></li>
         
         <li id="menu-admin" class="hidden mt-4">
-          <a href="#" id="nav-admin" class="flex items-center gap-3 px-3 py-2.5 text-red-400 hover:text-white hover:bg-red-400/10 border border-red-400/20 rounded-lg font-bold text-sm transition-colors shadow-sm">
-            <i class="fa-solid fa-crown w-5"></i> Gestão da Turma
-          </a>
+          <a href="#" id="nav-admin" class="flex items-center gap-3 px-3 py-2.5 text-red-400 hover:text-white hover:bg-red-400/10 border border-red-400/20 rounded-lg font-bold text-sm transition-colors shadow-sm"><i class="fa-solid fa-crown w-5"></i> Gestão da Turma</a>
         </li>
       </ul>
     </nav>
-
     <div class="p-4 border-t border-[var(--border-dark)]">
-      <button id="btn-sair" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors border border-transparent hover:border-red-400/20">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair do Sistema
-      </button>
+      <button id="btn-sair" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors border border-transparent hover:border-red-400/20"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair do Sistema</button>
     </div>
   </aside>
 
   <div class="flex-1 flex flex-col h-screen overflow-hidden">
-    
     <header class="h-16 bg-[var(--bg-card)] border-b border-[var(--border-dark)] flex items-center justify-between px-6 lg:px-10">
-      <div class="flex items-center gap-4">
-        <h2 id="titulo-pagina" class="text-lg font-bold">Visão Geral</h2>
-      </div>
-      
+      <h2 id="titulo-pagina" class="text-lg font-bold">Visão Geral</h2>
       <div class="flex items-center gap-3">
         <div class="text-right hidden sm:block">
           <p id="user-name" class="text-sm font-bold text-white">Carregando...</p>
           <p id="user-role" class="text-xs text-[var(--color-primary)] font-semibold">Aluno Verificado</p>
         </div>
-        <div class="h-10 w-10 bg-[var(--color-blue)] rounded-full flex items-center justify-center text-white font-bold border-2 border-[var(--border-dark)] shadow-sm">
-          <i class="fa-solid fa-user"></i>
-        </div>
+        <div class="h-10 w-10 bg-[var(--color-blue)] rounded-full flex items-center justify-center text-white font-bold border-2 border-[var(--border-dark)] shadow-sm"><i class="fa-solid fa-user"></i></div>
       </div>
     </header>
 
@@ -97,45 +61,76 @@
           <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
           <div class="relative z-10">
             <h1 class="text-2xl lg:text-3xl font-extrabold text-white mb-2 tracking-tight">Bem-vindo ao CORE.</h1>
-            <p class="text-blue-100 text-sm max-w-2xl font-light">
-              Sua central de gestão estudantil. Fique por dentro dos horários, anúncios importantes da liderança e projetos da turma de Informática para Internet.
-            </p>
+            <p class="text-blue-100 text-sm max-w-2xl font-light">Sua central de gestão estudantil. Fique por dentro dos horários, anúncios importantes da liderança e projetos da turma.</p>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6 hover:border-[var(--text-muted)] transition-colors">
+          <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6">
             <div class="flex items-center justify-between mb-4">
               <h3 class="font-bold text-lg"><i class="fa-regular fa-clock text-[var(--color-blue)] mr-2"></i> Hoje no IFPR</h3>
-              <span class="text-xs font-bold bg-[#2a2a2e] px-2 py-1 rounded text-[var(--text-muted)]">Terça</span>
+              <span id="dash-dia" class="text-xs font-bold bg-[#2a2a2e] px-2 py-1 rounded text-[var(--text-muted)]">Carregando...</span>
             </div>
             <ul class="space-y-3 text-sm">
-              <li class="flex justify-between items-center border-b border-[var(--border-dark)] pb-2"><span class="text-[var(--text-muted)]">19:00 - 20:30</span><span class="font-semibold text-white">Lógica de Prog.</span></li>
-              <li class="flex justify-between items-center border-b border-[var(--border-dark)] pb-2"><span class="text-[var(--text-muted)]">20:45 - 22:30</span><span class="font-semibold text-white">Design Web</span></li>
+              <li class="flex justify-between items-center border-b border-[var(--border-dark)] pb-2"><span id="dash-hora1" class="text-[var(--text-muted)]">--:--</span><span id="dash-aula1" class="font-semibold text-white">...</span></li>
+              <li class="flex justify-between items-center border-b border-[var(--border-dark)] pb-2"><span id="dash-hora2" class="text-[var(--text-muted)]">--:--</span><span id="dash-aula2" class="font-semibold text-white">...</span></li>
             </ul>
           </div>
 
-          <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6 hover:border-[var(--text-muted)] transition-colors">
+          <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6">
             <h3 class="font-bold text-lg mb-4"><i class="fa-solid fa-thumbtack text-red-400 mr-2"></i> Mural da Turma</h3>
             <div class="bg-[#2a2a2e] rounded-lg p-4 border-l-4 border-red-400">
-              <h4 class="text-sm font-bold text-white mb-1">Apresentação Cancelada</h4>
-              <p class="text-xs text-[var(--text-muted)] leading-relaxed">A apresentação do projeto que ocorreria hoje foi transferida para a próxima semana.</p>
+              <h4 id="dash-aviso-titulo" class="text-sm font-bold text-white mb-1">...</h4>
+              <p id="dash-aviso-texto" class="text-xs text-[var(--text-muted)] leading-relaxed">...</p>
             </div>
           </div>
 
-          <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6 hover:border-[var(--text-muted)] transition-colors">
+          <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-6">
             <h3 class="font-bold text-lg mb-4"><i class="fa-solid fa-mug-hot text-[#d97706] mr-2"></i> Campanha do Café</h3>
             <p class="text-sm text-[var(--text-muted)] mb-4">A arrecadação mensal para manter nossa garrafa térmica abastecida está aberta!</p>
-            <div class="w-full bg-[#2a2a2e] rounded-full h-2.5 mb-2"><div class="bg-[#d97706] h-2.5 rounded-full" style="width: 70%"></div></div>
-            <div class="flex justify-between text-xs font-bold text-[var(--text-muted)]"><span>Arrecadado: R$ 35</span><span>Meta: R$ 50</span></div>
+            <div class="w-full bg-[#2a2a2e] rounded-full h-2.5 mb-2"><div id="dash-cafe-barra" class="bg-[#d97706] h-2.5 rounded-full transition-all duration-1000" style="width: 0%"></div></div>
+            <div class="flex justify-between text-xs font-bold text-[var(--text-muted)]"><span id="dash-cafe-valor">R$ 0</span><span id="dash-cafe-meta">Meta: R$ 0</span></div>
           </div>
         </div>
       </div>
 
       <div id="view-admin" class="hidden">
-        <h1 class="text-2xl font-extrabold mb-2 text-white">Controle da Turma</h1>
-        <p class="text-[var(--text-muted)] text-sm mb-8">Aprove solicitações, edite nomes e redefina senhas.</p>
+        <h1 class="text-2xl font-extrabold mb-6 text-white border-b border-[var(--border-dark)] pb-2">Central de Comando</h1>
+        
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-10">
+          
+          <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] p-5 rounded-xl">
+            <h3 class="font-bold text-sm text-red-400 mb-3 uppercase tracking-wider"><i class="fa-solid fa-pen mr-1"></i> Editar Mural</h3>
+            <input type="text" id="edit-aviso-titulo" class="w-full bg-[#2a2a2e] border border-[var(--border-dark)] rounded p-2 text-sm text-white mb-2 focus:border-red-400 outline-none" placeholder="Título do Aviso">
+            <textarea id="edit-aviso-texto" class="w-full bg-[#2a2a2e] border border-[var(--border-dark)] rounded p-2 text-sm text-white mb-3 focus:border-red-400 outline-none h-20" placeholder="Texto do aviso..."></textarea>
+            <button onclick="salvarPainel()" class="w-full bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/50 rounded p-2 text-xs font-bold transition-colors">Publicar Aviso</button>
+          </div>
 
+          <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] p-5 rounded-xl">
+            <h3 class="font-bold text-sm text-[var(--color-blue)] mb-3 uppercase tracking-wider"><i class="fa-regular fa-clock mr-1"></i> Editar Aulas Hoje</h3>
+            <input type="text" id="edit-dia" class="w-full bg-[#2a2a2e] border border-[var(--border-dark)] rounded p-2 text-sm text-white mb-2" placeholder="Dia da Semana (Ex: Terça)">
+            <div class="flex gap-2 mb-2">
+              <input type="text" id="edit-hora1" class="w-1/3 bg-[#2a2a2e] border border-[var(--border-dark)] rounded p-2 text-xs text-white" placeholder="19:00">
+              <input type="text" id="edit-aula1" class="w-2/3 bg-[#2a2a2e] border border-[var(--border-dark)] rounded p-2 text-xs text-white" placeholder="Matéria 1">
+            </div>
+            <div class="flex gap-2 mb-3">
+              <input type="text" id="edit-hora2" class="w-1/3 bg-[#2a2a2e] border border-[var(--border-dark)] rounded p-2 text-xs text-white" placeholder="20:45">
+              <input type="text" id="edit-aula2" class="w-2/3 bg-[#2a2a2e] border border-[var(--border-dark)] rounded p-2 text-xs text-white" placeholder="Matéria 2">
+            </div>
+            <button onclick="salvarPainel()" class="w-full bg-[var(--color-blue)] hover:bg-[#0f4396] text-white rounded p-2 text-xs font-bold transition-colors">Atualizar Horários</button>
+          </div>
+
+          <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] p-5 rounded-xl">
+            <h3 class="font-bold text-sm text-[#d97706] mb-3 uppercase tracking-wider"><i class="fa-solid fa-mug-hot mr-1"></i> Fundo do Café</h3>
+            <label class="text-xs text-[var(--text-muted)]">Valor Arrecadado (R$)</label>
+            <input type="number" id="edit-cafe-valor" class="w-full bg-[#2a2a2e] border border-[var(--border-dark)] rounded p-2 text-sm text-white mb-2" placeholder="Ex: 35">
+            <label class="text-xs text-[var(--text-muted)]">Meta Mensal (R$)</label>
+            <input type="number" id="edit-cafe-meta" class="w-full bg-[#2a2a2e] border border-[var(--border-dark)] rounded p-2 text-sm text-white mb-3" placeholder="Ex: 50">
+            <button onclick="salvarPainel()" class="w-full bg-[#d97706] hover:bg-[#b45309] text-white rounded p-2 text-xs font-bold transition-colors">Atualizar Caixinha</button>
+          </div>
+        </div>
+
+        <h1 class="text-2xl font-extrabold mb-4 text-white border-b border-[var(--border-dark)] pb-2">Gestão de Alunos</h1>
         <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl overflow-hidden shadow-lg">
           <table class="w-full text-left border-collapse">
             <thead>
@@ -155,7 +150,7 @@
 
     </main>
   </div>
-
+  
   <script type="module" src="js/painel.js"></script>
 </body>
 </html>
