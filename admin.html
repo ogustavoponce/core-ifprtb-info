@@ -24,54 +24,65 @@
     body { background-color: var(--bg-puro); color: var(--text-main); }
   </style>
 </head>
-<body class="antialiased flex h-screen overflow-hidden">
+<body class="antialiased h-screen overflow-hidden bg-[var(--bg-puro)] relative">
 
-  <aside class="w-64 bg-[var(--bg-card)] border-r border-[var(--border-dark)] flex flex-col hidden md:flex">
-    <div class="h-16 flex items-center px-6 border-b border-[var(--border-dark)]">
-      <img src="assets/img/logo.png" alt="Logo CORE" class="h-8 w-auto">
-    </div>
-    <nav class="flex-1 overflow-y-auto py-4">
-      <ul class="space-y-1 px-3">
-        <li>
-          <a href="painel.html" class="flex items-center gap-3 px-3 py-2.5 text-[var(--text-muted)] hover:text-white hover:bg-[#2a2a2e] rounded-lg font-semibold text-sm transition-colors">
-            <i class="fa-solid fa-house w-5"></i> Voltar ao Início
-          </a>
-        </li>
-        <li>
-          <a href="#" class="flex items-center gap-3 px-3 py-2.5 bg-[var(--color-blue)] text-white rounded-lg font-semibold text-sm transition-colors mt-4">
-            <i class="fa-solid fa-users-gear w-5"></i> Gestão de Acessos
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </aside>
+  <div id="tela-bloqueio" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg-puro)]">
+    <i class="fa-solid fa-lock text-6xl text-red-500 mb-6 animate-pulse"></i>
+    <h1 class="text-3xl font-extrabold text-white mb-2 tracking-widest uppercase">Acesso Restrito</h1>
+    <p class="text-[var(--text-muted)] text-sm font-semibold" id="msg-bloqueio">Verificando credenciais de Liderança...</p>
+  </div>
 
-  <div class="flex-1 flex flex-col h-screen overflow-hidden">
-    <header class="h-16 bg-[var(--bg-card)] border-b border-[var(--border-dark)] flex items-center px-6 lg:px-10">
-      <h2 class="text-lg font-bold text-red-500"><i class="fa-solid fa-lock mr-2"></i> Área Restrita - Liderança</h2>
-    </header>
-
-    <main class="flex-1 overflow-y-auto p-6 lg:p-10">
-      <h1 class="text-2xl font-extrabold mb-2">Alunos Pendentes</h1>
-      <p class="text-[var(--text-muted)] text-sm mb-8">Controle quem tem acesso à plataforma da turma.</p>
-
-      <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl overflow-hidden shadow-lg">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr class="bg-[#2a2a2e] text-[var(--text-muted)] text-xs uppercase tracking-wider">
-              <th class="p-4 font-bold">Nome do Aluno</th>
-              <th class="p-4 font-bold">E-mail</th>
-              <th class="p-4 font-bold text-center">Ações</th>
-            </tr>
-          </thead>
-          <tbody id="lista-pendentes" class="text-sm">
-            <tr>
-              <td colspan="3" class="p-8 text-center text-[var(--text-muted)]">Carregando solicitações...</td>
-            </tr>
-          </tbody>
-        </table>
+  <div id="tela-admin" class="hidden flex h-full">
+    
+    <aside class="w-64 bg-[var(--bg-card)] border-r border-[var(--border-dark)] flex flex-col hidden md:flex">
+      <div class="h-16 flex items-center px-6 border-b border-[var(--border-dark)]">
+        <img src="assets/img/logo.png" alt="Logo CORE" class="h-8 w-auto">
       </div>
-    </main>
+      <nav class="flex-1 overflow-y-auto py-4">
+        <ul class="space-y-1 px-3">
+          <li>
+            <a href="painel.html" class="flex items-center gap-3 px-3 py-2.5 text-[var(--text-muted)] hover:text-white hover:bg-[#2a2a2e] rounded-lg font-semibold text-sm transition-colors">
+              <i class="fa-solid fa-arrow-left w-5"></i> Voltar ao Painel
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg font-bold text-sm transition-colors mt-4">
+              <i class="fa-solid fa-users-gear w-5"></i> Gestão de Acessos
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+      <header class="h-16 bg-[var(--bg-card)] border-b border-[var(--border-dark)] flex items-center px-6 lg:px-10">
+        <h2 class="text-lg font-bold text-red-500"><i class="fa-solid fa-crown mr-2"></i> Painel da Liderança</h2>
+      </header>
+
+      <main class="flex-1 overflow-y-auto p-6 lg:p-10">
+        <h1 class="text-2xl font-extrabold mb-2">Controle da Turma</h1>
+        <p class="text-[var(--text-muted)] text-sm mb-8">Aprove solicitações, edite nomes e redefina senhas.</p>
+
+        <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl overflow-hidden shadow-lg">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#2a2a2e] text-[var(--text-muted)] text-xs uppercase tracking-wider">
+                <th class="p-4 font-bold">Aluno</th>
+                <th class="p-4 font-bold">E-mail</th>
+                <th class="p-4 font-bold text-center">Status</th>
+                <th class="p-4 font-bold text-center">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="lista-pendentes" class="text-sm">
+              <tr>
+                <td colspan="4" class="p-8 text-center text-[var(--text-muted)]">Carregando base de dados...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
   </div>
 
   <script type="module" src="js/admin.js"></script>
