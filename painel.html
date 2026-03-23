@@ -71,7 +71,7 @@
               <span id="banner-tag" class="inline-block text-[10px] sm:text-xs font-bold text-blue-200 uppercase tracking-widest mb-2 px-2 py-1 bg-black/20 rounded"><i class="fa-solid fa-rocket mr-1"></i> PLATAFORMA CORE</span>
               <h1 id="banner-titulo" class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white mb-2 tracking-tight line-clamp-2">Bem-vindo à sua central.</h1>
               <p id="banner-texto" class="text-blue-100 text-xs sm:text-sm max-w-2xl font-light line-clamp-2 mb-4">Acompanhe a rotina da turma, acesse os fóruns e fique por dentro dos editais.</p>
-              <a href="#" id="banner-btn-link" target="_blank" class="hidden inline-flex items-center gap-2 bg-white text-[var(--color-blue)] hover:bg-gray-100 px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-colors shadow-md w-full sm:w-auto justify-center"><i class="fa-solid fa-link"></i> Edital Oficial</a>
+              <a href="#" id="banner-btn-link" target="_blank" class="hidden inline-flex items-center justify-center gap-2 bg-white text-[var(--color-blue)] hover:bg-gray-100 px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-colors shadow-md w-full sm:w-auto"><i class="fa-solid fa-link"></i> Edital Oficial</a>
             </div>
             <button onclick="document.getElementById('nav-hub').click()" class="shrink-0 text-xs sm:text-sm font-bold text-white/80 hover:text-white border border-white/30 hover:bg-white/10 px-4 py-2 rounded transition-colors self-start md:self-center">Ver Histórico <i class="fa-solid fa-arrow-right ml-1"></i></button>
           </div>
@@ -92,7 +92,10 @@
           <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-5 sm:p-6 flex flex-col relative overflow-hidden">
             <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-base sm:text-lg"><i class="fa-regular fa-clock text-[var(--color-blue)] mr-2"></i> Hoje no IFPR</h3><span id="dash-dia" class="text-[10px] sm:text-xs font-bold bg-[#2a2a2e] px-2 py-1 rounded text-[var(--text-muted)] border border-[var(--border-dark)] uppercase">...</span></div>
             <ul id="dash-lista-aulas" class="space-y-3 text-sm mb-4"></ul>
-            <div class="mt-auto pt-4 bg-[#2a2a2e] -mx-5 sm:-mx-6 -mb-5 sm:-mb-6 p-5 sm:p-6 rounded-b-xl border-t border-[var(--border-dark)]"><h4 class="text-[10px] sm:text-xs font-bold text-yellow-500 uppercase tracking-widest mb-2"><i class="fa-solid fa-list-check mr-1"></i> Tarefas / Provas</h4><p id="dash-tarefa" class="text-xs sm:text-sm font-semibold text-white">Aguardando dados...</p></div>
+            <div class="mt-auto pt-4 bg-[#2a2a2e] -mx-5 sm:-mx-6 -mb-5 sm:-mb-6 p-5 sm:p-6 rounded-b-xl border-t border-[var(--border-dark)]">
+              <h4 class="text-[10px] sm:text-xs font-bold text-yellow-500 uppercase tracking-widest mb-2"><i class="fa-solid fa-list-check mr-1"></i> Tarefas / Provas</h4>
+              <div id="dash-tarefa" class="text-xs sm:text-sm font-semibold text-white space-y-1">Aguardando dados...</div>
+            </div>
           </div>
           <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-5 sm:p-6">
             <h3 class="font-bold text-base sm:text-lg mb-4"><i class="fa-solid fa-circle-exclamation text-red-400 mr-2"></i> Aviso Permanente</h3>
@@ -114,23 +117,21 @@
       </div>
 
       <div id="view-calendario" class="hidden flex-col h-full w-full max-w-5xl mx-auto">
-        <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-3 sm:p-6 h-full flex flex-col w-full">
-          <div class="flex justify-between items-center mb-4 sm:mb-6">
+        <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl p-3 sm:p-6 h-full flex flex-col w-full relative">
+          <div class="flex justify-between items-center mb-4 sm:mb-6 shrink-0">
             <button id="btn-mes-ant" class="bg-[#2a2a2e] hover:bg-[var(--border-dark)] text-white px-3 sm:px-4 py-2 rounded transition"><i class="fa-solid fa-chevron-left"></i></button>
             <h2 id="mes-atual-titulo" class="text-sm sm:text-xl font-bold uppercase text-white">Carregando...</h2>
             <button id="btn-mes-prox" class="bg-[#2a2a2e] hover:bg-[var(--border-dark)] text-white px-3 sm:px-4 py-2 rounded transition"><i class="fa-solid fa-chevron-right"></i></button>
           </div>
-          <div class="grid grid-cols-7 gap-1 sm:gap-2 text-center text-[9px] sm:text-xs font-bold text-[var(--text-muted)] mb-1 sm:mb-2 uppercase">
+          <div class="grid grid-cols-7 gap-1 sm:gap-2 text-center text-[9px] sm:text-xs font-bold text-[var(--text-muted)] mb-1 sm:mb-2 uppercase shrink-0">
             <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
           </div>
-          <div id="calendario-grade" class="grid grid-cols-7 gap-1 sm:gap-2 flex-1 auto-rows-[minmax(45px,auto)] sm:auto-rows-[minmax(60px,auto)]"></div>
+          <div id="calendario-grade" class="grid grid-cols-7 gap-1 sm:gap-2 flex-1 auto-rows-[minmax(60px,auto)] sm:auto-rows-[minmax(80px,auto)] overflow-y-auto pr-1"></div>
         </div>
       </div>
 
       <div id="view-forum" class="hidden flex-col h-[calc(100vh-8rem)] w-full max-w-5xl mx-auto">
-        <div class="bg-[var(--bg-puro)] sm:bg-[var(--bg-card)] sm:border border-[var(--border-dark)] sm:rounded-t-xl p-0 sm:p-6 flex-1 overflow-y-auto pb-4" id="chat-box">
-          </div>
-        
+        <div class="bg-[var(--bg-puro)] sm:bg-[var(--bg-card)] sm:border border-[var(--border-dark)] sm:rounded-t-xl p-0 sm:p-6 flex-1 overflow-y-auto pb-4" id="chat-box"></div>
         <div class="bg-[var(--bg-puro)] sm:bg-[var(--bg-card)] sm:border-x sm:border-b border-t border-[var(--border-dark)] sm:rounded-b-xl p-3 sm:p-4 shrink-0">
           <div class="relative flex items-center bg-[#2a2a2e] border border-[var(--border-dark)] rounded-full focus-within:border-[var(--color-blue)] transition-colors pr-1.5 shadow-inner">
             <input type="text" id="chat-input" class="flex-1 bg-transparent text-white text-sm px-5 py-3.5 outline-none placeholder-[var(--text-muted)]" placeholder="Conversar com a turma..." autocomplete="off">
@@ -142,16 +143,13 @@
       </div>
 
       <div id="view-admin" class="hidden w-full max-w-5xl mx-auto pb-20">
-        
-        <h3 class="text-base sm:text-lg font-bold text-white border-b border-[var(--border-dark)] pb-2 mb-4"><i class="fa-solid fa-calendar-day mr-2 text-[var(--color-blue)]"></i> Gestão do Dia (Dashboard)</h3>
+        <h3 class="text-base sm:text-lg font-bold text-white border-b border-[var(--border-dark)] pb-2 mb-4"><i class="fa-solid fa-calendar-day mr-2 text-[var(--color-blue)]"></i> Gestão do Dia</h3>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-          
           <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] p-4 sm:p-5 rounded-xl flex flex-col items-center justify-center text-center">
             <i class="fa-solid fa-robot text-4xl text-[var(--color-blue)] mb-4 opacity-50"></i>
             <h4 class="text-sm font-bold text-white mb-2 uppercase tracking-wider">Aulas & Tarefas</h4>
-            <p class="text-[10px] sm:text-xs text-[var(--text-muted)] leading-relaxed max-w-xs">A grade curricular da Turma foi automatizada no sistema. Os eventos e tarefas agora são puxados <strong>diretamente do Calendário Letivo</strong>.</p>
+            <p class="text-[10px] sm:text-xs text-[var(--text-muted)] leading-relaxed max-w-xs">A grade curricular da Turma foi automatizada. Os eventos e tarefas são puxados <strong>diretamente do Calendário</strong>.</p>
           </div>
-
           <div class="flex flex-col gap-6">
             <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] p-4 sm:p-5 rounded-xl">
               <h4 class="text-[10px] sm:text-xs font-bold text-[var(--text-muted)] mb-3 uppercase tracking-wider">Aviso Permanente</h4>
@@ -164,17 +162,17 @@
             </div>
           </div>
         </div>
-        <button onclick="salvarPainel()" class="w-full bg-[var(--color-blue)] hover:bg-[#0f4396] text-white rounded-xl p-4 text-xs sm:text-sm font-bold transition-colors shadow-lg mb-12"><i class="fa-solid fa-arrows-rotate mr-2"></i> Atualizar Painel Principal</button>
+        <button onclick="salvarPainel()" class="w-full bg-[var(--color-blue)] hover:bg-[#0f4396] text-white rounded-xl p-4 text-xs sm:text-sm font-bold transition-colors shadow-lg mb-12"><i class="fa-solid fa-arrows-rotate mr-2"></i> Atualizar Painel</button>
 
         <h3 class="text-base sm:text-lg font-bold text-white border-b border-[var(--border-dark)] pb-2 mb-4"><i class="fa-solid fa-layer-group mr-2 text-[var(--color-primary)]"></i> Lançar Edital no Hub</h3>
         <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] p-4 sm:p-6 rounded-xl mb-12 shadow-md">
           <div class="flex flex-col sm:flex-row gap-3 mb-3">
-            <input type="text" id="hub-titulo" class="w-full sm:w-2/3 bg-[#2a2a2e] border-[var(--border-dark)] rounded p-3 text-xs sm:text-sm text-white" placeholder="Ex: Edital PACE 2026">
+            <input type="text" id="hub-titulo" class="w-full sm:w-2/3 bg-[#2a2a2e] border-[var(--border-dark)] rounded p-3 text-xs sm:text-sm text-white" placeholder="Ex: Edital PACE">
             <select id="hub-categoria" class="w-full sm:w-1/3 bg-[#2a2a2e] border-[var(--border-dark)] rounded p-3 text-xs sm:text-sm text-white outline-none">
               <option value="Bolsa/Auxílio">Bolsa/Auxílio</option><option value="Evento">Evento</option><option value="Estágio/Emprego">Estágio/Emprego</option><option value="Comunicado Oficial">Comunicado Oficial</option>
             </select>
           </div>
-          <textarea id="hub-texto" class="w-full bg-[#2a2a2e] border-[var(--border-dark)] rounded p-3 text-xs sm:text-sm text-white mb-3 h-20 sm:h-24" placeholder="Resumo: Por que isso é importante para a turma?"></textarea>
+          <textarea id="hub-texto" class="w-full bg-[#2a2a2e] border-[var(--border-dark)] rounded p-3 text-xs sm:text-sm text-white mb-3 h-20 sm:h-24" placeholder="Resumo: Por que isso é importante?"></textarea>
           <input type="url" id="hub-link" class="w-full bg-[#2a2a2e] border-[var(--border-dark)] rounded p-3 text-xs sm:text-sm text-white mb-4" placeholder="Cole o Link Oficial do site do IFPR aqui...">
           <button onclick="postarHub()" class="bg-[var(--color-primary)] hover:bg-green-600 text-white rounded px-6 py-3 text-xs sm:text-sm font-bold transition-colors w-full sm:w-auto"><i class="fa-solid fa-paper-plane mr-2"></i> Publicar na Vitrine</button>
         </div>
@@ -182,13 +180,7 @@
         <h3 class="text-base sm:text-lg font-bold text-white border-b border-[var(--border-dark)] pb-2 mb-4"><i class="fa-solid fa-users mr-2 text-purple-400"></i> Controle de Acessos</h3>
         <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl overflow-x-auto shadow-lg mb-10 w-full">
           <table class="w-full text-left border-collapse min-w-[500px]">
-            <thead>
-              <tr class="bg-[#2a2a2e] text-[var(--text-muted)] text-[10px] sm:text-xs uppercase tracking-wider">
-                <th class="p-3 sm:p-4 font-bold">Aluno & Contato</th>
-                <th class="p-3 sm:p-4 font-bold text-center">Status</th>
-                <th class="p-3 sm:p-4 font-bold text-center">Ações</th>
-              </tr>
-            </thead>
+            <thead><tr class="bg-[#2a2a2e] text-[var(--text-muted)] text-[10px] sm:text-xs uppercase tracking-wider"><th class="p-3 sm:p-4 font-bold">Aluno & Contato</th><th class="p-3 sm:p-4 font-bold text-center">Status</th><th class="p-3 sm:p-4 font-bold text-center">Ações</th></tr></thead>
             <tbody id="lista-pendentes" class="text-xs sm:text-sm"></tbody>
           </table>
         </div>
@@ -196,7 +188,7 @@
 
       <div id="view-perfil" class="hidden flex-col h-full w-full max-w-3xl mx-auto pb-20">
         <h1 class="text-xl sm:text-2xl font-extrabold text-white mb-1"><i class="fa-solid fa-id-badge mr-2 text-[var(--color-blue)]"></i> Meu Perfil</h1>
-        <p class="text-[var(--text-muted)] text-xs sm:text-sm mb-6 border-b border-[var(--border-dark)] pb-4">Personalize como a turma vê você no sistema.</p>
+        <p class="text-[var(--text-muted)] text-xs sm:text-sm mb-6 border-b border-[var(--border-dark)] pb-4">Personalize como a turma vê você.</p>
         
         <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] p-5 sm:p-8 rounded-xl shadow-lg flex flex-col gap-6">
           <div class="flex items-center gap-4 border-b border-[var(--border-dark)] pb-6">
@@ -229,6 +221,23 @@
     </main>
   </div>
   
+  <div id="modal-calendario" class="fixed inset-0 bg-black/80 z-[60] hidden flex-col items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+    <div class="bg-[var(--bg-card)] border border-[var(--border-dark)] rounded-xl w-full max-w-sm sm:max-w-md shadow-2xl flex flex-col overflow-hidden animate-[scale-in_0.2s_ease-out]">
+      <div class="p-4 border-b border-[var(--border-dark)] flex justify-between items-center bg-[#2a2a2e]">
+        <h3 id="modal-cal-titulo" class="text-sm sm:text-base font-bold text-white uppercase tracking-wide">Gerenciar Dia</h3>
+        <button onclick="fecharModalCalendario()" class="text-[var(--text-muted)] hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
+      </div>
+      <div class="p-4 flex-1 overflow-y-auto max-h-60 sm:max-h-80 bg-[var(--bg-puro)]">
+        <ul id="modal-cal-lista" class="space-y-2">
+          </ul>
+      </div>
+      <div class="p-4 border-t border-[var(--border-dark)] bg-[#2a2a2e] flex gap-2">
+        <input type="text" id="modal-cal-input" class="flex-1 bg-[var(--bg-puro)] border border-[var(--border-dark)] rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[var(--color-blue)]" placeholder="Adicionar nova prova, seminário...">
+        <button id="btn-modal-add" class="bg-[var(--color-blue)] hover:bg-[#0f4396] text-white px-4 py-2 rounded-lg text-sm font-bold transition-transform hover:scale-105 shadow-md"><i class="fa-solid fa-plus"></i></button>
+      </div>
+    </div>
+  </div>
+
   <script type="module" src="js/painel.js"></script>
 </body>
 </html>
