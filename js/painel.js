@@ -294,3 +294,32 @@ window.removerAluno = async (id) => { if(confirm("Apagar?")) { await deleteDoc(d
 window.editarNome = async (id, nAtual) => { const n = prompt("Nome:", nAtual); if (n && n !== nAtual) { await updateDoc(doc(db, "alunos", id), { nome: n }); carregarAlunos(); } };
 window.resetarSenha = async (email) => { if(confirm(`Reset para ${email}?`)) { await sendPasswordResetEmail(auth, email); alert("Enviado!"); } };
 document.getElementById('btn-sair').addEventListener('click', async () => { await signOut(auth); window.location.href = "index.html"; });
+// ==========================================
+// UX MOBILE: CONTROLE DO MENU HAMBÚRGUER
+// ==========================================
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('mobile-overlay');
+const btnAbrir = document.getElementById('btn-abrir-menu');
+const btnFechar = document.getElementById('btn-fechar-menu');
+
+// Função que abre/fecha a gaveta
+function toggleMenu() {
+  if (sidebar && overlay) {
+    sidebar.classList.toggle('-translate-x-full');
+    overlay.classList.toggle('hidden');
+  }
+}
+
+// Ouvintes de clique
+if (btnAbrir) btnAbrir.addEventListener('click', toggleMenu);
+if (btnFechar) btnFechar.addEventListener('click', toggleMenu);
+if (overlay) overlay.addEventListener('click', toggleMenu); // Fecha se clicar no fundo escuro
+
+// Fecha o menu automaticamente no celular ao clicar em qualquer item da navegação
+document.querySelectorAll('aside nav a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth < 768 && !sidebar.classList.contains('-translate-x-full')) {
+      toggleMenu();
+    }
+  });
+});
