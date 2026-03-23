@@ -9,7 +9,7 @@ let isAdmin = false;
 let meuEmoji = "";
 
 // ==========================================
-// 1. O CÉREBRO: PILOTO AUTOMÁTICO DE AULAS
+// 1. CÉREBROS E DICIONÁRIOS (AULAS E FERIADOS 2026)
 // ==========================================
 const GRADE_DE_AULAS_FIXA = {
   1: { dia: "Segunda-feira", a1: "Lógica de Prog.", a2: "Design Web" },
@@ -17,6 +17,25 @@ const GRADE_DE_AULAS_FIXA = {
   3: { dia: "Quarta-feira",  a1: "Matemática",     a2: "Inglês" },
   4: { dia: "Quinta-feira",  a1: "Empreendedorismo", a2: "Projetos" },
   5: { dia: "Sexta-feira",   a1: "Sistemas",       a2: "Hardware" }
+};
+
+// Calendário Oficial Nível Google (Nacionais + Telêmaco Borba)
+const FERIADOS_2026 = {
+  "2026-0-1": ["✨ Confraternização Universal"],
+  "2026-1-16": ["🎉 Recesso de Carnaval"],
+  "2026-1-17": ["🎭 Carnaval"],
+  "2026-1-18": ["⛪ Quarta-feira de Cinzas"],
+  "2026-2-21": ["🎂 Aniversário de Telêmaco Borba"],
+  "2026-3-3": ["✝️ Paixão de Cristo"],
+  "2026-3-21": ["🇧🇷 Tiradentes"],
+  "2026-4-1": ["👷 Dia do Trabalhador"],
+  "2026-5-4": ["⛪ Corpus Christi"],
+  "2026-5-27": ["🙏 Padroeira de Telêmaco Borba"],
+  "2026-8-7": ["🇧🇷 Independência do Brasil"],
+  "2026-9-12": ["🙏 Nossa Sra. Aparecida"],
+  "2026-10-2": ["🕊️ Finados"],
+  "2026-10-15": ["🇧🇷 Proclamação da República"],
+  "2026-11-25": ["🎄 Natal"]
 };
 
 // ==========================================
@@ -88,7 +107,11 @@ function trocarTela(telaAtiva) {
 
 document.querySelectorAll('aside nav a').forEach(btn => { btn.addEventListener('click', (e) => { e.preventDefault(); trocarTela(e.currentTarget.id.replace('nav-', '')); }); });
 const btnPerfil = document.getElementById('user-photo'); if(btnPerfil) btnPerfil.addEventListener('click', () => { trocarTela('perfil'); carregarMeuPerfil(); });
-function formatarLinks(texto) { return texto.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-[var(--color-blue)] hover:underline font-bold">Link</a>'); }
+
+// Formatador Inteligente de Links (Acha URLs e transforma em botões)
+function formatarLinks(texto) { 
+  return texto.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-blue-400 hover:text-blue-300 underline font-bold transition-colors"><i class="fa-solid fa-link text-xs"></i> Acessar Link</a>'); 
+}
 
 // ==========================================
 // 4. MEU PERFIL (Profiler)
@@ -114,7 +137,7 @@ window.salvarMeuPerfil = async () => {
 };
 
 // ==========================================
-// 5. PILOTO AUTOMÁTICO & RADAR INTELIGENTE (MULTI-EVENTO)
+// 5. PILOTO AUTOMÁTICO & RADAR INTELIGENTE (COM FERIADOS E LINKS)
 // ==========================================
 function injetarPilotoAutomatico() {
   const diaSemana = new Date().getDay(); const ulGrade = document.getElementById('dash-lista-aulas'); const dashDia = document.getElementById('dash-dia');
@@ -132,7 +155,14 @@ function processarRadarTarefas(eventosBanco) {
   const hoje = new Date(); hoje.setHours(0,0,0,0);
   let tHojeArr = []; let eFuturoArr = []; let dias = 999;
   
-  for (const [dataId, evList] of Object.entries(eventosBanco)) {
+  // Mescla os eventos do banco com os Feriados Oficiais
+  let todosEventos = { ...eventosBanco };
+  for(let key in FERIADOS_2026) {
+    if(!todosEventos[key]) todosEventos[key] = [];
+    todosEventos[key] = [...FERIADOS_2026[key], ...todosEventos[key]];
+  }
+  
+  for (const [dataId, evList] of Object.entries(todosEventos)) {
     if(!evList || evList.length === 0) continue;
     const p = dataId.split('-'); const dEvento = new Date(p[0], p[1], p[2]);
     const diff = Math.ceil((dEvento.getTime() - hoje.getTime()) / (1000 * 3600 * 24));
@@ -147,24 +177,25 @@ function processarRadarTarefas(eventosBanco) {
   const dT = document.getElementById('dash-tarefa'); const dR = document.getElementById('radar-container'); const dRT = document.getElementById('radar-texto');
   if(dT) { 
     if (tHojeArr.length > 0) {
-      let html = ''; tHojeArr.forEach(t => html += `<div class="text-yellow-400 mb-1 leading-tight"><i class="fa-solid fa-thumbtack mr-1"></i> ${t}</div>`); dT.innerHTML = html;
-    } else { dT.innerHTML = `<span class="text-[var(--text-muted)] font-normal">Nenhuma atividade hoje.</span>`; } 
+      let html = ''; tHojeArr.forEach(t => html += `<div class="text-yellow-400 mb-1.5 leading-tight"><i class="fa-solid fa-thumbtack mr-1"></i> ${formatarLinks(t)}</div>`); dT.innerHTML = html;
+    } else { dT.innerHTML = `<span class="text-[var(--text-muted)] font-normal">Nenhuma atividade extra hoje.</span>`; } 
   }
   if(dR && dRT) { 
     if (eFuturoArr.length > 0) { 
       dR.classList.remove('hidden'); dR.classList.add('flex'); 
-      dRT.innerText = `${eFuturoArr.join(' / ')} (${dias === 1 ? 'AMANHÃ' : `em ${dias} dias`} - ${eFuturoArr.dataFormatada})`; 
+      // Tira os links gigantes do texto do alerta radar para não estourar a tela
+      let textosLimpos = eFuturoArr.map(t => t.replace(/(https?:\/\/[^\s]+)/g, '🔗 [Link]')).join(' / ');
+      dRT.innerText = `${textosLimpos} (${dias === 1 ? 'AMANHÃ' : `em ${dias} dias`} - ${eFuturoArr.dataFormatada})`; 
     } else { dR.classList.add('hidden'); dR.classList.remove('flex'); } 
   }
 }
 
 // ==========================================
-// 6. NOVO CALENDÁRIO COM MODAL GOOGLE AGENDA
+// 6. CALENDÁRIO COM FERIADOS E LINKS CLICÁVEIS
 // ==========================================
 let mesAtual = new Date().getMonth(); let anoAtual = new Date().getFullYear(); 
 const mesesNomes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-
-window.dataIdAtualModal = null; // Armazena qual dia o Admin está editando
+window.dataIdAtualModal = null; 
 
 function renderizarCalendario() {
   const grid = document.getElementById('calendario-grade');
@@ -173,41 +204,45 @@ function renderizarCalendario() {
   
   onSnapshot(collection(db, "calendario"), (snapshot) => {
     let eventosMes = {}; 
-    snapshot.forEach(doc => { 
-      const d = doc.data(); 
-      // Retrocompatibilidade e Nova Array
-      eventosMes[doc.id] = d.eventos || (d.texto ? [d.texto] : []); 
-    });
+    snapshot.forEach(doc => { const d = doc.data(); eventosMes[doc.id] = d.eventos || (d.texto ? [d.texto] : []); });
     
     processarRadarTarefas(eventosMes);
+    
     if(grid) {
         grid.innerHTML = ''; for (let i = 0; i < primeiroDia; i++) grid.innerHTML += `<div></div>`; 
         for (let dia = 1; dia <= diasNoMes; dia++) {
-          let id = `${anoAtual}-${mesAtual}-${dia}`; let evDia = eventosMes[id] || []; let ehHoje = (dia === hoje.getDate() && mesAtual === hoje.getMonth() && anoAtual === hoje.getFullYear());
+          let id = `${anoAtual}-${mesAtual}-${dia}`; 
+          let evDia = [...(FERIADOS_2026[id] || []), ...(eventosMes[id] || [])]; // Injeta os Feriados Níveis Google
+          let ehHoje = (dia === hoje.getDate() && mesAtual === hoje.getMonth() && anoAtual === hoje.getFullYear());
           let cf = ehHoje ? 'bg-[var(--color-blue)] border-[var(--color-blue)]' : 'bg-[#2a2a2e] border-[var(--border-dark)] hover:border-[var(--color-blue)]';
           
           let tagsHTML = '';
-          evDia.forEach(ev => { tagsHTML += `<div class="mt-1 text-[8px] sm:text-[10px] leading-tight font-bold bg-yellow-500 text-black px-1 py-0.5 rounded truncate w-full shadow-sm">${ev}</div>`; });
+          evDia.forEach(ev => { 
+            let textoCurto = ev.replace(/(https?:\/\/[^\s]+)/g, '🔗 [Link]'); // Encurta a URL feia no quadradinho
+            tagsHTML += `<div class="mt-1 text-[8px] sm:text-[10px] leading-tight font-bold bg-yellow-500 text-black px-1 py-0.5 rounded truncate w-full shadow-sm">${textoCurto}</div>`; 
+          });
           
-          let cli = isAdmin ? `onclick="abrirModalCalendario('${id}', '${dia}/${mesAtual+1}/${anoAtual}')"` : '';
-          let cur = isAdmin ? 'cursor-pointer hover:-translate-y-1 transition-transform' : '';
+          // Agora TODOS podem clicar para VER o dia, mas só ADMIN pode gerenciar
+          let cli = `onclick="abrirModalCalendario('${id}', '${dia}/${mesAtual+1}/${anoAtual}')"`;
+          let cur = 'cursor-pointer hover:-translate-y-1 transition-transform';
           grid.innerHTML += `<div ${cli} class="border rounded p-1 sm:p-2 flex flex-col ${cf} ${cur} overflow-hidden"><span class="font-bold text-[10px] sm:text-xs text-right ${ehHoje ? 'text-white' : 'text-gray-300'}">${dia}</span>${tagsHTML}</div>`;
         }
     }
   });
 }
-
 if(document.getElementById('btn-mes-ant')) document.getElementById('btn-mes-ant').addEventListener('click', () => { mesAtual--; if(mesAtual < 0) { mesAtual = 11; anoAtual--; } renderizarCalendario(); });
 if(document.getElementById('btn-mes-prox')) document.getElementById('btn-mes-prox').addEventListener('click', () => { mesAtual++; if(mesAtual > 11) { mesAtual = 0; anoAtual++; } renderizarCalendario(); });
 
-// -- LÓGICA DO MODAL DE CALENDÁRIO --
 window.abrirModalCalendario = (docId, dFmt) => {
   window.dataIdAtualModal = docId;
   document.getElementById('modal-cal-titulo').innerText = `Agendamentos: ${dFmt}`;
   document.getElementById('modal-calendario').classList.remove('hidden'); document.getElementById('modal-calendario').classList.add('flex');
+  
+  // Esconde a barra de adicionar evento para alunos comuns
+  if(!isAdmin) document.getElementById('btn-modal-add').parentElement.classList.add('hidden');
+  
   atualizarListaModal();
 };
-
 window.fecharModalCalendario = () => { document.getElementById('modal-calendario').classList.add('hidden'); document.getElementById('modal-calendario').classList.remove('flex'); window.dataIdAtualModal = null; };
 
 window.atualizarListaModal = async () => {
@@ -216,10 +251,21 @@ window.atualizarListaModal = async () => {
     const docSnap = await getDoc(doc(db, "calendario", window.dataIdAtualModal)); let evs = [];
     if(docSnap.exists()) { const d = docSnap.data(); evs = d.eventos || (d.texto ? [d.texto] : []); }
     lista.innerHTML = '';
-    if(evs.length === 0) { lista.innerHTML = '<li class="text-center text-[var(--text-muted)] text-xs py-4">Nenhuma atividade neste dia.</li>'; } 
+    
+    let temFeriado = false;
+    if(FERIADOS_2026[window.dataIdAtualModal]) {
+        temFeriado = true;
+        FERIADOS_2026[window.dataIdAtualModal].forEach(f => {
+            lista.innerHTML += `<li class="flex justify-between items-center bg-[var(--color-blue)]/20 border border-[var(--color-blue)]/50 p-3 rounded-lg shadow-sm mb-2"><span class="text-xs sm:text-sm text-blue-200 font-semibold flex-1 mr-3 leading-tight break-words">${f}</span><i class="fa-solid fa-lock text-blue-300/50 text-sm" title="Feriado Fixo"></i></li>`;
+        });
+    }
+
+    if(evs.length === 0 && !temFeriado) { lista.innerHTML = '<li class="text-center text-[var(--text-muted)] text-xs py-4">Nenhuma atividade neste dia.</li>'; } 
     else {
       evs.forEach((ev, idx) => {
-        lista.innerHTML += `<li class="flex justify-between items-center bg-[var(--bg-card)] border border-[var(--border-dark)] p-3 rounded-lg shadow-sm mb-2 group"><span class="text-xs sm:text-sm text-white font-semibold flex-1 mr-3 leading-tight">${ev}</span><button onclick="removerEventoModal(${idx})" class="text-[var(--text-muted)] hover:text-red-400 w-8 h-8 flex items-center justify-center shrink-0 rounded hover:bg-red-400/10 transition-colors"><i class="fa-solid fa-trash-can text-sm"></i></button></li>`;
+        let btnLixo = isAdmin ? `<button onclick="removerEventoModal(${idx})" class="text-[var(--text-muted)] hover:text-red-400 w-8 h-8 flex items-center justify-center shrink-0 rounded hover:bg-red-400/10 transition-colors"><i class="fa-solid fa-trash-can text-sm"></i></button>` : '';
+        // FORMATADOR DE LINKS ATIVADO! Agora a URL vira um botão clicável dentro da janela flutuante
+        lista.innerHTML += `<li class="flex justify-between items-center bg-[var(--bg-card)] border border-[var(--border-dark)] p-3 rounded-lg shadow-sm mb-2 group"><span class="text-xs sm:text-sm text-white font-semibold flex-1 mr-3 leading-tight break-words">${formatarLinks(ev)}</span>${btnLixo}</li>`;
       });
     }
   } catch(e) { lista.innerHTML = '<li class="text-center text-red-400 text-xs py-4">Erro ao carregar.</li>'; }
@@ -230,7 +276,7 @@ window.adicionarEventoModal = async () => {
   try {
     const ref = doc(db, "calendario", window.dataIdAtualModal); const docSnap = await getDoc(ref); let evs = [];
     if(docSnap.exists()) { const d = docSnap.data(); evs = d.eventos || (d.texto ? [d.texto] : []); }
-    evs.push(val.substring(0, 50)); await setDoc(ref, { eventos: evs }, { merge: true }); atualizarListaModal();
+    evs.push(val.substring(0, 100)); await setDoc(ref, { eventos: evs }, { merge: true }); atualizarListaModal(); // Subi o limite para caber links
   } catch(e) {}
 };
 
@@ -244,12 +290,11 @@ window.removerEventoModal = async (idx) => {
     }
   } catch(e) {}
 };
-
 const btnModalAdd = document.getElementById('btn-modal-add'); if(btnModalAdd) btnModalAdd.addEventListener('click', window.adicionarEventoModal);
 const inputModal = document.getElementById('modal-cal-input'); if(inputModal) inputModal.addEventListener('keypress', (e) => { if(e.key === 'Enter') window.adicionarEventoModal(); });
 
 // ==========================================
-// 7. HUB E FÓRUM (ESTILO DISCORD)
+// 7. HUB E FÓRUM (COM LINKS)
 // ==========================================
 function carregarHub() {
   onSnapshot(query(collection(db, "hub_editais"), orderBy("timestamp", "desc")), (snapshot) => {
