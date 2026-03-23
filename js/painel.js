@@ -20,7 +20,7 @@ const gradeAulas = {
 };
 
 // ==========================================
-// 1. INICIALIZAÇÃO E SEGURANÇA
+// 1. INICIALIZAÇÃO (COM FOTO DE PERFIL)
 // ==========================================
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -28,43 +28,42 @@ onAuthStateChanged(auth, async (user) => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists() && docSnap.data().status === 'aprovado') {
+      // 1. Pega o nome do usuário
       usuarioAtualNome = user.displayName || docSnap.data().nome;
       document.getElementById('user-name').innerText = usuarioAtualNome;
 
+      // 2. MAGIA DA FOTO DE PERFIL 📸
+      const imgPerfil = document.getElementById('user-photo');
+      if (imgPerfil) {
+        if (user.photoURL) {
+          // Se logou com o Google e tem foto, puxa a original
+          imgPerfil.src = user.photoURL;
+        } else {
+          // Se não tiver foto, gera um avatar azul lindo com as iniciais do nome!
+          imgPerfil.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(usuarioAtualNome)}&background=1351b4&color=fff&size=128&bold=true`;
+        }
+      }
+
+      // 3. Verifica se é a Liderança
       if (user.email === EMAIL_ADMIN) {
-        isAdmin = true;
         document.getElementById('menu-admin').classList.remove('hidden');
         document.getElementById('user-role').innerText = "Presidente / Admin";
         document.getElementById('user-role').classList.replace('text-[var(--color-primary)]', 'text-red-400');
       }
       
-      injetarGradeDeAulas();
+      // Carrega o resto do painel...
       escutarPainelDados(); 
       escutarForum();       
       carregarHub();       
-      escutarCalendarioGlobal(); // Ativa o Radar e Tarefas do Dia!
-      renderizarCalendario(); // Cria a visualização da Agenda
-    } else { window.location.href = "index.html"; }
-  } else { window.location.href = "index.html"; }
-});
+      renderizarCalendario(); 
 
-// Injeta as aulas baseadas no dia do computador
-function injetarGradeDeAulas() {
-  const diaSemana = new Date().getDay(); // 0 a 6
-  const rotinaHoje = gradeAulas[diaSemana];
-  
-  document.getElementById('dash-dia').innerText = rotinaHoje.dia;
-  const listaAulas = document.getElementById('dash-lista-aulas');
-  listaAulas.innerHTML = '';
-
-  if (rotinaHoje.aulas.length === 0) {
-    listaAulas.innerHTML = `<li class="text-center text-[var(--text-muted)] py-4 font-bold border border-dashed border-[var(--border-dark)] rounded-lg">Fim de semana! Aproveite o descanso.</li>`;
-  } else {
-    rotinaHoje.aulas.forEach(aula => {
-      listaAulas.innerHTML += `<li class="flex justify-between items-center border-b border-[var(--border-dark)] pb-2"><span class="text-[var(--text-muted)]">${aula.hora}</span><span class="font-semibold text-white truncate max-w-[150px] sm:max-w-xs text-right" title="${aula.nome}">${aula.nome}</span></li>`;
-    });
+    } else { 
+      window.location.href = "index.html"; 
+    }
+  } else { 
+    window.location.href = "index.html"; 
   }
-}
+});
 
 // ==========================================
 // 2. ROTEAMENTO SPA (Telas)
