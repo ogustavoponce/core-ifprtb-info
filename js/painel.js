@@ -6,7 +6,7 @@ const EMAIL_ADMIN = "gustavo.ponce.ifpr@gmail.com";
 let usuarioAtualNome = "Aluno"; 
 let usuarioAtualFoto = "assets/img/default-avatar.png";
 let isAdmin = false;
-let meuEmoji = ""; // O emoji do perfil do aluno
+let meuEmoji = "";
 
 // ==========================================
 // 1. O CÉREBRO: PILOTO AUTOMÁTICO DE AULAS
@@ -63,7 +63,7 @@ if (btnFechar) btnFechar.addEventListener('click', toggleMenu);
 if (overlay) overlay.addEventListener('click', toggleMenu);
 
 // ==========================================
-// 3. ROTEAMENTO SPA (Telas) & PERFIL
+// 3. ROTEAMENTO SPA (Telas) E PERFIL
 // ==========================================
 const views = ['dashboard', 'hub', 'calendario', 'forum', 'admin', 'perfil'];
 const navs = {
@@ -135,7 +135,7 @@ window.salvarMeuPerfil = async () => {
     await updateDoc(doc(db, "alunos", auth.currentUser.uid), { emoji: emoji, whatsapp: wpp, instagram: insta });
     meuEmoji = emoji;
     document.getElementById('user-name').innerText = meuEmoji ? `${usuarioAtualNome} ${meuEmoji}` : usuarioAtualNome;
-    alert("✅ Perfil salvo! Agora seu emoji vai aparecer no Fórum e no Painel.");
+    alert("✅ Perfil salvo! Agora seu emoji vai aparecer no Fórum.");
   } catch(e) { alert("Erro ao salvar."); }
   btn.innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Salvar Alterações`;
 };
@@ -226,38 +226,59 @@ function carregarHub() {
 window.postarHub = async () => { const t = document.getElementById('hub-titulo').value.trim(); const c = document.getElementById('hub-categoria').value; const txt = document.getElementById('hub-texto').value.trim(); const l = document.getElementById('hub-link').value.trim(); if(!t || !txt) { alert("Preencha tudo."); return; } try { await addDoc(collection(db, "hub_editais"), { titulo: t, categoria: c, texto: txt, link: l, timestamp: serverTimestamp() }); document.getElementById('hub-titulo').value=''; document.getElementById('hub-texto').value=''; document.getElementById('hub-link').value=''; alert("✅ Lançado!"); } catch(e) {} };
 
 // ==========================================
-// 7. FÓRUM (COM EMOJI E EXCLUSÃO FANTASMA)
+// 7. FÓRUM (ESTILO DISCORD COM HOVER E HORAS)
 // ==========================================
+function formatarDataHora(timestamp) {
+  if (!timestamp) return "Enviando...";
+  const data = timestamp.toDate();
+  const hoje = new Date();
+  const ontem = new Date(hoje); ontem.setDate(ontem.getDate() - 1);
+  
+  const horas = data.getHours().toString().padStart(2, '0');
+  const mins = data.getMinutes().toString().padStart(2, '0');
+  const horaFmt = `${horas}:${mins}`;
+
+  if (data.toDateString() === hoje.toDateString()) return `Hoje às ${horaFmt}`;
+  if (data.toDateString() === ontem.toDateString()) return `Ontem às ${horaFmt}`;
+  return `${data.toLocaleDateString('pt-BR')} às ${horaFmt}`;
+}
+
 function escutarForum() {
   onSnapshot(query(collection(db, "forum_mensagens"), orderBy("timestamp", "asc")), (snapshot) => {
-    const chatBox = document.getElementById('chat-box'); if(!chatBox) return; chatBox.innerHTML = '';
-    if(snapshot.empty) { chatBox.innerHTML = '<div class="text-center text-[var(--text-muted)] mt-10 text-xs">Sem mensagens.</div>'; return; }
+    const chatBox = document.getElementById('chat-box'); 
+    if(!chatBox) return; 
+    chatBox.innerHTML = '';
+    
+    if(snapshot.empty) { 
+      chatBox.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-[var(--text-muted)] opacity-60"><i class="fa-solid fa-ghost text-4xl mb-3"></i><p class="text-sm font-bold">O chat está vazio.</p><p class="text-xs">Mande o primeiro salve da turma!</p></div>`; 
+      return; 
+    }
     
     snapshot.forEach((docSnap) => {
       const msg = docSnap.data(); const id = docSnap.id;
-      // O campo msg.autor já vem com o emoji no banco!
-      const isMe = msg.uid === auth.currentUser.uid; // Mudado para checar UID e não o nome (por causa do emoji)
+      const isMe = msg.uid === auth.currentUser.uid; 
       const isRep = msg.role === 'Representante';
+      const timeStr = formatarDataHora(msg.timestamp);
       
       if (msg.apagada) {
         if (!isAdmin) {
-          chatBox.innerHTML += `<div class="flex items-center gap-2 opacity-50"><div class="w-6 h-6 rounded-full bg-[#2a2a2e] flex items-center justify-center"><i class="fa-solid fa-ban text-[10px] text-gray-500"></i></div><div class="text-[10px] italic text-gray-500 border border-[var(--border-dark)] bg-[#1a1a1e] px-3 py-1.5 rounded-xl">Mensagem apagada</div></div>`;
+          chatBox.innerHTML += `<div class="px-4 py-2 flex items-center gap-3 opacity-50"><div class="w-10 flex justify-center"><i class="fa-solid fa-ban text-xs text-gray-500"></i></div><p class="text-xs italic text-gray-500">Mensagem apagada pelo usuário.</p></div>`;
         } else {
-          chatBox.innerHTML += `<div class="flex items-start gap-2 opacity-60"><img src="${msg.foto}" class="w-8 h-8 rounded-full border border-red-500/50 grayscale"><div class="bg-red-500/10 border border-red-500/30 p-2 rounded-xl rounded-tl-none text-xs w-full relative"><span class="font-bold text-red-400 block mb-1">${msg.autor} <i class="fa-solid fa-ghost ml-1"></i></span><span class="text-white line-through">${formatarLinks(msg.texto)}</span><button onclick="hardDeleteMsg('${id}')" class="absolute -right-2 -top-2 bg-red-600 text-white w-5 h-5 rounded-full text-[10px] shadow-lg"><i class="fa-solid fa-xmark"></i></button></div></div>`;
+          chatBox.innerHTML += `<div class="group px-4 py-3 flex gap-4 hover:bg-red-500/5 border-l-2 border-transparent hover:border-red-500/50 transition-colors relative"><img src="${msg.foto}" class="w-10 h-10 rounded-full object-cover shrink-0 grayscale opacity-50"><div class="flex-1 min-w-0"><div class="flex items-baseline gap-2 mb-0.5"><span class="font-bold text-sm text-red-400">${msg.autor}</span><span class="bg-red-500/20 text-red-400 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase"><i class="fa-solid fa-ghost mr-1"></i> Apagada</span><span class="text-[10px] text-[var(--text-muted)] ml-1">${timeStr}</span></div><p class="text-sm text-white/50 line-through">${formatarLinks(msg.texto)}</p></div><button onclick="hardDeleteMsg('${id}')" class="absolute right-4 top-4 bg-[var(--bg-card)] border border-red-500/30 text-red-500 hover:bg-red-600 hover:text-white w-7 h-7 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-md"><i class="fa-solid fa-xmark text-sm"></i></button></div>`;
         }
         return;
       }
 
-      let tagRep = isRep ? `<span class="bg-yellow-500 text-black text-[8px] font-extrabold px-1.5 py-0.5 rounded uppercase ml-1 shadow-sm"><i class="fa-solid fa-crown"></i> Liderança</span>` : '';
-      let bubbleColor = isMe ? 'bg-[var(--color-blue)]/20 border-[var(--color-blue)]/40' : 'bg-[#2a2a2e] border-[var(--border-dark)]';
-      let nomeColor = isMe ? 'text-[var(--color-blue)]' : (isRep ? 'text-yellow-500' : 'text-[var(--color-primary)]');
-      let btnDelete = (isMe || isAdmin) ? `<button onclick="softDeleteMsg('${id}')" class="absolute -right-2 -top-2 bg-[var(--bg-puro)] border border-[var(--border-dark)] text-gray-500 hover:text-red-400 w-5 h-5 rounded-full text-[10px] hidden group-hover:flex items-center justify-center"><i class="fa-solid fa-trash-can"></i></button>` : '';
+      let tagRep = isRep ? `<span class="bg-yellow-500 text-black text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase shadow-sm transform -translate-y-[1px]"><i class="fa-solid fa-crown mr-1"></i> Liderança</span>` : '';
+      let nomeColor = isRep ? 'text-yellow-500' : 'text-white';
+      let btnDelete = (isMe || isAdmin) ? `<button onclick="softDeleteMsg('${id}')" class="absolute right-4 top-4 bg-[var(--bg-card)] border border-[var(--border-dark)] text-[var(--text-muted)] hover:text-red-400 hover:border-red-400/30 w-7 h-7 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-sm"><i class="fa-solid fa-trash-can text-xs"></i></button>` : '';
 
-      chatBox.innerHTML += `<div class="flex items-start gap-2 group"><img src="${msg.foto}" class="w-8 h-8 rounded-full border border-[var(--border-dark)] object-cover shrink-0"><div class="relative ${bubbleColor} border p-2 rounded-xl rounded-tl-none text-xs max-w-[85%]"><span class="font-bold block mb-1 ${nomeColor}">${msg.autor} ${tagRep}</span><span class="text-white leading-relaxed break-words">${formatarLinks(msg.texto)}</span>${btnDelete}</div></div>`;
+      chatBox.innerHTML += `<div class="group px-4 py-3 flex gap-3 sm:gap-4 hover:bg-white/[0.02] border-l-2 border-transparent hover:border-[var(--color-blue)]/50 transition-colors relative"><img src="${msg.foto}" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[var(--border-dark)] object-cover shrink-0 mt-0.5"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1 flex-wrap"><span class="font-bold text-sm sm:text-base ${nomeColor}">${msg.autor}</span>${tagRep}<span class="text-[10px] sm:text-xs text-[var(--text-muted)] ml-1">${timeStr}</span></div><p class="text-sm sm:text-base text-[var(--text-main)] leading-relaxed break-words pr-8">${formatarLinks(msg.texto)}</p></div>${btnDelete}</div>`;
     });
     chatBox.scrollTop = chatBox.scrollHeight;
   });
 }
+
 window.enviarMensagem = async () => {
   const input = document.getElementById('chat-input'); const texto = input.value.trim(); if(!texto) return;
   try { 
@@ -266,9 +287,12 @@ window.enviarMensagem = async () => {
     await addDoc(collection(db, "forum_mensagens"), { texto: texto, autor: nomeComEmoji, uid: auth.currentUser.uid, foto: usuarioAtualFoto, role: isAdmin ? 'Representante' : 'Aluno', apagada: false, timestamp: serverTimestamp() }); 
   } catch(e) {}
 };
-if(document.getElementById('btn-enviar-msg')) document.getElementById('btn-enviar-msg').addEventListener('click', window.enviarMensagem);
-window.softDeleteMsg = async (id) => { if(confirm("Apagar para a turma?")) await updateDoc(doc(db, "forum_mensagens", id), { apagada: true }); };
-window.hardDeleteMsg = async (id) => { if(confirm("Admin: DELETAR DEFINITIVO?")) await deleteDoc(doc(db, "forum_mensagens", id)); };
+const btnEnviar = document.getElementById('btn-enviar-msg'); const inputChat = document.getElementById('chat-input');
+if(btnEnviar) btnEnviar.addEventListener('click', window.enviarMensagem);
+if(inputChat) inputChat.addEventListener('keypress', (e) => { if(e.key === 'Enter') { e.preventDefault(); window.enviarMensagem(); } });
+
+window.softDeleteMsg = async (id) => { if(confirm("Deseja apagar esta mensagem? Ela sumirá para a turma.")) await updateDoc(doc(db, "forum_mensagens", id), { apagada: true }); };
+window.hardDeleteMsg = async (id) => { if(confirm("Atenção Liderança: Deseja EXCLUIR DEFINITIVAMENTE esta mensagem do banco de dados?")) await deleteDoc(doc(db, "forum_mensagens", id)); };
 
 // ==========================================
 // 8. ADMIN: AVISOS E ALUNOS
@@ -286,7 +310,7 @@ function escutarPainelDados() {
     }
   });
 }
-window.salvarPainel = async () => { try { await setDoc(doc(db, "painel_dados", "geral"), { aviso_titulo: document.getElementById('edit-aviso-titulo').value, aviso_texto: document.getElementById('edit-aviso-texto').value, cafe_valor: document.getElementById('edit-cafe-valor').value, cafe_meta: document.getElementById('edit-cafe-meta').value }, { merge: true }); alert("✅ Atualizado!"); } catch (e) {} };
+window.salvarPainel = async () => { try { await setDoc(doc(db, "painel_dados", "geral"), { aviso_titulo: document.getElementById('edit-aviso-titulo').value, aviso_texto: document.getElementById('edit-aviso-texto').value, cafe_valor: document.getElementById('edit-cafe-valor').value, cafe_meta: document.getElementById('edit-cafe-meta').value }, { merge: true }); alert("✅ Fundo e Avisos atualizados!"); } catch (e) {} };
 
 async function carregarAlunos() {
   const lista = document.getElementById('lista-pendentes'); if(!lista) return;
